@@ -8159,3 +8159,130 @@ RESPONSIVE STYLESHEET
 .wp-block-social-links {
   flex-wrap: wrap !important;
 }
+/*Yêu cầu 3 khôi*/
+#blog-section {
+  background-color: #f9f9f9;
+  padding: 50px 0;
+  text-align: center;
+}
+
+#blog-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#blog-section .section-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+#blog-section .section-desc {
+  font-size: 1.1rem;
+  color: #777;
+  margin-bottom: 50px;
+}
+
+#blog-section .article-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+#blog-section .post {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+
+
+#blog-section .post-thumbnail {
+  width: 50%;
+  height: auto;
+  overflow: hidden;
+}
+
+#blog-section .post-thumbnail img {
+  padding-left: 35px;
+  padding-top: 30px;
+  width: 100%;
+  height: 310px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+
+
+#blog-section .entry-header {
+  width: 50%;
+  padding: 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+#blog-section .entry-title a {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin-top: 18px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#blog-section .entry-title a:hover {
+  color: #e67e22;
+}
+
+#blog-section .entry-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #666;
+  display: -webkit-box;
+ 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#blog-section .read-more {
+  font-size: 1rem;
+  color: #e67e22;
+  text-decoration: none;
+  font-weight: bold;
+  padding-bottom: 45px;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+#blog-section .read-more:hover {
+  color: #d35400;
+}
+
+#blog-section .btn-wrap {
+  margin-top: 40px;
+}
+
+#blog-section .btn {
+  padding: 12px 30px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #e67e22;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+#blog-section .btn:hover {
+  background-color: #d35400;
+}
+
+/*=============*/
