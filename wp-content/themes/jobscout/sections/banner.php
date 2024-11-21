@@ -11,6 +11,33 @@ $banner_subtitle   = get_theme_mod( 'banner_subtitle', __( 'Each month, more tha
 $find_a_job_link   = get_option( 'job_manager_jobs_page_id', 0 );
         
 if( $ed_banner && has_custom_header() ){ ?>
+    <div class="search_location">											
+<?php											
+global $wpdb;											
+$table  = $wpdb->prefix . 'postmeta';											
+$sql = "SELECT DISTINCT SUBSTRING_INDEX(`meta_value`,',',-1) as location FROM `wp_postmeta` WHERE `meta_key` like '%location%' ORDER BY location";											
+$data = $wpdb->get_results($wpdb->prepare($sql));											
+?>											
+											
+<div class="search_location">											
+<?php											
+global $wpdb;											
+$table  = $wpdb->prefix . 'postmeta';											
+$sql = "SELECT DISTINCT SUBSTRING_INDEX(`meta_value`,',',-1) as location FROM `wp_postmeta` WHERE `meta_key` like '%location%' ORDER BY location";											
+$data = $wpdb->get_results($wpdb->prepare($sql));											
+?>											
+											
+<select id="search_location" name="search_location" value="Khu vực">											
+<option value="">Khu vực</option>											
+<?php foreach ($data as $value) : ?>											
+<option value="<?php echo $value->location; ?>"><?php echo $value->location; ?></option>											
+<?php endforeach ?>											
+</select>											
+											
+</div>											
+										
+											
+</div>											
     <div id="banner-section" class="site-banner<?php if( has_header_video() ) echo esc_attr( ' video-banner' ); ?>">
         <div class="item">
             <?php the_custom_header_markup(); ?>
@@ -42,4 +69,5 @@ if( $ed_banner && has_custom_header() ){ ?>
         </div>
     </div>
 <?php
+
 }
