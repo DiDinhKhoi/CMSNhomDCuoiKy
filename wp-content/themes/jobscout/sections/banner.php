@@ -60,7 +60,7 @@
 
     /* Nút tìm kiếm */
     #banner-section .search-filter-wrap .search-job-btn {
-        padding: 10px 30px;
+        padding: 13px 13px;
         background-color: #ff5722;
         border: none;
         border-radius: 4px;
