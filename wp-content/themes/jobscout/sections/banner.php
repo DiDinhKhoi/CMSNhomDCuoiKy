@@ -84,31 +84,45 @@ if ( $ed_banner && has_custom_header() ) { ?>
                                 echo '<div style="text-align:left;" class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
                             }
                         ?>
-                        <div class="form-wrap">
-                            <form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="search-form">
-                                <div class="search-filter-wrap">
-                                    <!-- Search input -->
-                                    <div class="input-group">
-                                        <span class="icon"><i class="fas fa-search"></i></span>
-                                        <input type="text" name="s" placeholder="<?php esc_attr_e( 'Search for jobs, companies, skills', 'jobscout' ); ?>" />
-                                    </div>
-                                    <!-- Location dropdown -->
-                                    <div class="input-group">
-                                        <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
-                                        <select name="location">
-                                            <option value=""><?php esc_html_e( 'Select Location', 'jobscout' ); ?></option>
-                                            <option value="tokyo"><?php esc_html_e( 'Tokyo', 'jobscout' ); ?></option>
-                                            <option value="new-york"><?php esc_html_e( 'New York', 'jobscout' ); ?></option>
-                                            <option value="paris"><?php esc_html_e( 'Paris', 'jobscout' ); ?></option>
-                                        </select>
-                                    </div>
-                                    <!-- Search button -->
-                                    <button type="submit" class="search-job-btn">
-                                        <?php esc_html_e( 'Search Job', 'jobscout' ); ?>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                      <div class="form-wrap">
+    <form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="search-form">
+        <div class="search-filter-wrap">
+            <!-- Search input -->
+            <div class="input-group">
+                <span class="icon"><i class="fas fa-search"></i></span>
+                <input type="text" name="s" placeholder="<?php esc_attr_e( 'Search for jobs, companies, skills', 'jobscout' ); ?>" />
+            </div>
+            <!-- Location dropdown -->
+            <div class="input-group search_location">
+                <?php
+                global $wpdb;
+                $table = $wpdb->prefix . 'postmeta';
+                $sql = "SELECT DISTINCT SUBSTRING_INDEX(`meta_value`, ',', -1) as location 
+                        FROM `wp_postmeta` 
+                        WHERE `meta_key` LIKE '%location%' 
+                        ORDER BY location";
+                $data = $wpdb->get_results($sql); // Không cần prepare vì không có tham số động.
+                ?>
+                <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                <select id="search_location" name="search_location">
+                    <option value=""><?php esc_html_e( 'Khu vực', 'jobscout' ); ?></option>
+                    <?php if ($data): ?>
+                        <?php foreach ($data as $value): ?>
+                            <option value="<?php echo esc_attr($value->location); ?>">
+                                <?php echo esc_html($value->location); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+            </div>
+            <!-- Search button -->
+            <button type="submit" class="search-job-btn">
+                <?php esc_html_e( 'Search Job', 'jobscout' ); ?>
+            </button>
+        </div>
+    </form>
+</div>
+
                     </div>
                 </div>
             </div>
