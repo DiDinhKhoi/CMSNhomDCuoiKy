@@ -4,6 +4,9 @@
         justify-content: center;
         align-items: center;
         margin-top: 20px;
+        background-color: #00000047; /* Thêm nền đen */
+        padding: 15px;
+        /* Đặt padding 30px cho form */
     }
 
     #banner-section .search-filter-wrap {
@@ -60,13 +63,13 @@
 
     /* Nút tìm kiếm */
     #banner-section .search-filter-wrap .search-job-btn {
-        padding: 13px 13px;
+        padding: 15px 13px;
         background-color: #ff5722;
         border: none;
         border-radius: 4px;
         color: white;
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 13px;
         font-weight: bold;
         transition: background-color 0.3s ease;
     }
@@ -90,6 +93,8 @@
     }
 </style>
 
+
+
 <?php
 /**
  * Banner Section
@@ -98,8 +103,8 @@
  */
 
 $ed_banner         = get_theme_mod( 'ed_banner_section', true );
-$banner_title      = get_theme_mod( 'banner_title', __( 'Find Your Dream Jobs', 'jobscout' ) );
-$banner_subtitle   = get_theme_mod( 'banner_subtitle', __( 'The secret behind our company is simple: to always put ourselves in the other person’s shoes—employee, guest, or customer.', 'jobscout' ) );
+$banner_title      = get_theme_mod( 'banner_title', __( 'FIND YOUR DREAM JOBS', 'jobscout' ) );
+$banner_subtitle   = get_theme_mod( 'banner_subtitle', __( 'The secret behind our company is simple: to always put ourselves in the other person’s shoes - employee, customer, or transformer. This allows us to see the world through their eyes, anticipate their needs and better understand their feelings.', 'jobscout' ) );
 $find_a_job_link   = get_option( 'job_manager_jobs_page_id', 0 );
 
 if ( $ed_banner && has_custom_header() ) { ?>
@@ -115,10 +120,11 @@ if ( $ed_banner && has_custom_header() ) { ?>
                                 echo '<h2 style="text-align:left;" class="title";>' . esc_html( $banner_title ) . '</h2>';
                             }
                             if ( !empty( $banner_subtitle ) ) {
-                                echo '<div style="text-align:left;" class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
+                                echo '<div style="text-align:left;opacity:0.7;" class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
                             }
                         ?>
-                     <div class="form-wrap">
+                        <div class="bg-opacity">
+<div class="form-wrap">
     <form action="<?php echo esc_url(home_url('/')); ?>" method="get" class="search-form">
         <div class="search-filter-wrap">
             <!-- Ô tìm kiếm -->
@@ -156,6 +162,8 @@ if ( $ed_banner && has_custom_header() ) { ?>
         </div>
     </form>
 </div>
+                        </div>
+                     
 
                     </div>
                 </div>
