@@ -120,7 +120,7 @@ if ( $ed_banner && has_custom_header() ) { ?>
                                 echo '<h2 style="text-align:left;" class="title";>' . esc_html( $banner_title ) . '</h2>';
                             }
                             if ( !empty( $banner_subtitle ) ) {
-                                echo '<div style="text-align:left;opacity:0.7;" class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
+                                echo '<div style="text-align:left;opacity:0.7;font-size: 14px;" class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
                             }
                         ?>
                         <div class="bg-opacity">
