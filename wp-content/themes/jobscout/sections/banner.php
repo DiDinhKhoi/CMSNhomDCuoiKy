@@ -56,7 +56,6 @@
   background-color: #e64a19;
 }
 </style>
-
 <?php
 /**
  * Banner Section
@@ -68,45 +67,51 @@ $ed_banner         = get_theme_mod( 'ed_banner_section', true );
 $banner_title      = get_theme_mod( 'banner_title', __( 'Find Your Dream Jobs', 'jobscout' ) );
 $banner_subtitle   = get_theme_mod( 'banner_subtitle', __( 'The secret behind our company is simple: to always put ourselves in the other person’s shoes—employee, guest, or customer.', 'jobscout' ) );
 $find_a_job_link   = get_option( 'job_manager_jobs_page_id', 0 );
-        
-if( $ed_banner && has_custom_header() ){ ?>
-    <div id="banner-section" class="site-banner<?php if( has_header_video() ) echo esc_attr( ' video-banner' ); ?>">
+
+if ( $ed_banner && has_custom_header() ) { ?>
+    <div id="banner-section" class="site-banner<?php if ( has_header_video() ) echo esc_attr( ' video-banner' ); ?>">
         <div class="item">
             <?php the_custom_header_markup(); ?>
             <div class="banner-caption">
                 <div class="container">
                     <div class="caption-inner">
                         <?php 
-                            if( $banner_title ) echo '<h2 class="title">' . esc_html( $banner_title ) . '</h2>';
-                            if( $banner_subtitle ) echo '<div class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
+                            // Kiểm tra giá trị tiêu đề và phụ đề trước khi hiển thị
+                            if ( !empty( $banner_title ) ) {
+                                echo '<h2 style="text-align:left;" class="title";>' . esc_html( $banner_title ) . '</h2>';
+                            }
+                            if ( !empty( $banner_subtitle ) ) {
+                                echo '<div style="text-align:left;" class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
+                            }
                         ?>
                         <div class="form-wrap">
-                            <div class="search-filter-wrap">
-                                <!-- Search input -->
-                                <div class="input-group">
-                                    <span class="icon"><i class="fas fa-search"></i></span>
-                                    <input type="text" placeholder="<?php esc_attr_e( 'Search for jobs, companies, skills', 'jobscout' ); ?>" />
+                            <form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="search-form">
+                                <div class="search-filter-wrap">
+                                    <!-- Search input -->
+                                    <div class="input-group">
+                                        <span class="icon"><i class="fas fa-search"></i></span>
+                                        <input type="text" name="s" placeholder="<?php esc_attr_e( 'Search for jobs, companies, skills', 'jobscout' ); ?>" />
+                                    </div>
+                                    <!-- Location dropdown -->
+                                    <div class="input-group">
+                                        <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                                        <select name="location">
+                                            <option value=""><?php esc_html_e( 'Select Location', 'jobscout' ); ?></option>
+                                            <option value="tokyo"><?php esc_html_e( 'Tokyo', 'jobscout' ); ?></option>
+                                            <option value="new-york"><?php esc_html_e( 'New York', 'jobscout' ); ?></option>
+                                            <option value="paris"><?php esc_html_e( 'Paris', 'jobscout' ); ?></option>
+                                        </select>
+                                    </div>
+                                    <!-- Search button -->
+                                    <button type="submit" class="search-job-btn">
+                                        <?php esc_html_e( 'Search Job', 'jobscout' ); ?>
+                                    </button>
                                 </div>
-                                <!-- Location dropdown -->
-                                <div class="input-group">
-                                    <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
-                                    <select>
-                                        <option value=""><?php esc_html_e( 'Select Location', 'jobscout' ); ?></option>
-                                        <option value="tokyo"><?php esc_html_e( 'Tokyo', 'jobscout' ); ?></option>
-                                        <option value="new-york"><?php esc_html_e( 'New York', 'jobscout' ); ?></option>
-                                        <option value="paris"><?php esc_html_e( 'Paris', 'jobscout' ); ?></option>
-                                    </select>
-                                </div>
-                                <!-- Search button -->
-                                <button type="button" class="search-job-btn">
-                                    <?php esc_html_e( 'Search Job', 'jobscout' ); ?>
-                                </button>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<?php
-}
+<?php } ?>
