@@ -34,15 +34,13 @@ $company_name = get_post_meta( get_the_ID(), '_company_name', true );
 			<a href="<?php the_job_permalink(); ?>"><?php wpjm_the_job_title(); ?></a>
 		</h2>
 		
-		<?php if( $company_name ){ ?>
-			<div class="company-name">
-				<?php the_company_name(); ?>
-			</div>
-		<?php } ?>
+		<div class="job-post-date">
+			<strong>Created:</strong> <?php echo get_the_date(); ?>
+		</div>
 		
 		<div class="entry-meta">
 			<?php 
-				do_action( 'job_listing_meta_start' ); 
+				do_action( 'job_listing_meta_start' );
 
 				if( $job_salary ){
                     echo '<div class="salary-amt">
@@ -51,25 +49,39 @@ $company_name = get_post_meta( get_the_ID(), '_company_name', true );
                     </div>';
                 }
 			?>
-			<div class="company-address">
-				<i class="fas fa-map-marker-alt"></i>
-				<?php the_job_location( true ); ?>
-			</div>
 			
-			<?php 
+			<!-- Các phần tử job-type, company-name, company-address -->
+			<div class="job-meta">
+				<?php 
 				if ( get_option( 'job_manager_enable_types' ) ) { 
 					$types = wpjm_get_the_job_types(); 
 					if ( ! empty( $types ) ) : foreach ( $types as $jobtype ) : ?>
-						<li class="job-type <?php echo esc_attr( sanitize_title( $jobtype->slug ) ); ?>"><?php echo esc_html( $jobtype->name ); ?></li>
+						<span class="job-type"><?php echo esc_html( $jobtype->name ); ?></span>
 					<?php endforeach; endif; 
 				}
-				do_action( 'job_listing_meta_end' ); 
-			?>
-		</div>		
-	</div>
 
+				if( $company_name ){ ?>
+					<div class="company-name">
+						<?php the_company_name(); ?>
+					</div>
+				<?php }
+
+				if( get_the_job_location() ) { ?>
+					<span class="company-address"><?php the_job_location( true ); ?></span>
+				<?php }
+				?>
+			</div>
+
+			<?php do_action( 'job_listing_meta_end' ); ?>
+		</div>
+	</div>
+	
+	<div class="job-description">
+		<?php echo apply_filters( 'the_content', get_the_content() ); ?>
+	</div>
 	<?php if( $job_featured ){ ?>
 		<div class="featured-label"><?php esc_html_e( 'Featured', 'jobscout' ); ?></div>
 	<?php } ?>
 
 </article>
+

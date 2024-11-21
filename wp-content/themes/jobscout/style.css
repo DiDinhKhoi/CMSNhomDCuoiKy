@@ -8286,3 +8286,139 @@ RESPONSIVE STYLESHEET
 }
 
 /*=============*/
+
+
+
+/* -------------------------------Yêu cầu 2----------------------------------- */
+
+/* Xóa dấu + trong ::before */
+.load_more_jobs::before {
+  content: none !important;
+}
+
+/* Tùy chỉnh lại nút Load More Jobs */
+.load_more_jobs {
+  display: block;
+  text-align: center;
+  background-color: #e67e22 !important;
+  color: #fff !important;
+  padding: 10px 20px;
+  font-size: 14px !important;
+  font-weight: bold;
+  border-radius: 4px !important;
+  margin: 20px auto;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out;
+  border: 2px solid transparent; /* Border mặc định là trong suốt */
+}
+
+.load_more_jobs:hover {
+  background-color: #fff  !important;
+  color: #e67e22 !important;
+  border: 1px solid #e67e22 !important; /* Viền cam */
+}
+
+.load_more_jobs strong {
+  margin-left: -20px;
+}
+
+.company-name::before {
+  content: none !important;
+}
+
+.svg-inline--fa.fa-location-dot {
+  display: none;
+}
+
+/* Loại bỏ border-top, margin-top, padding-top, font-size từ .entry-meta */
+.entry-meta {
+  border-top: none !important; /* Loại bỏ border-top */
+  margin-top: 0 !important; /* Loại bỏ margin-top */
+  padding-top: 0 !important; /* Loại bỏ padding-top */
+}
+
+/* Tiêu đề công việc - giảm size */
+.entry-title {
+  font-size: 18px !important; /* Font size nhỏ lại */
+  margin-bottom: 5px !important;
+}
+
+/* Ngày tạo công việc - giảm size */
+.job-post-date {
+  font-size: 12px; /* Font size nhỏ lại */
+  color: #777;
+  margin-bottom: 5px;
+}
+
+/* Mô tả công việc */
+.job-description {
+  margin-top: 20px;
+  margin-left: -57px;
+  font-size: 13px;
+  color: #555;
+}
+
+.job-type {
+  color: #555 !important;
+  padding: 6px;
+  padding-right: 10px;
+  padding-left: 10px;
+  position: relative;
+}
+
+.job-type::after {
+  content: "";
+  position: absolute;
+  right: 0; /* Điều chỉnh vị trí của đường kẻ dọc */
+  top: 10px;
+  bottom: 11px;
+  width: 1px;
+  background-color: #ddd;
+}
+
+.company-name {
+  color: #555 !important;
+  padding-top: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: relative;
+}
+
+.company-name::after {
+  content: "";
+  position: absolute;
+  right: 0; /* Điều chỉnh vị trí của đường kẻ dọc */
+  top: 5px;
+  bottom: 10px;
+  width: 1px;
+  background-color: #ddd;
+}
+
+.company-address {
+  color: #555 !important;
+  padding-top: 8px;
+  padding-left: 10px;
+}
+
+.google_map_link {
+  color: #555 !important;
+  font-size: 11px;
+}
+
+/* Thêm border chung cho 3 phần job-type, company-name, company-address */
+.job-meta {
+  display: flex;
+  font-size: 12px !important; /* Font size nhỏ lại */
+  background-color: #f1f1f1; /* Màu nền xám nhạt */
+  border: 1px solid #ddd; /* Border bao quanh */
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.company_logo {
+  border: 1px solid #d0d0d0;
+}
+
+.entry-title a:hover {
+  color: #e67e22 !important;
+}
