@@ -1,61 +1,95 @@
 <style>
     #banner-section .form-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
 
-#banner-section .search-filter-wrap {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
+    #banner-section .search-filter-wrap {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: nowrap;
+    }
 
-#banner-section .input-group {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+    #banner-section .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
 
-#banner-section .input-group .icon {
-  position: absolute;
-  left: 10px;
-  font-size: 1.2rem;
-  color: #ff5722;
-}
+    #banner-section .input-group .icon {
+        position: absolute;
+        left: 10px; /* Đặt icon ở bên trái */
+        font-size: 1.2rem;
+        color: #ff5722;
+        z-index: 1; /* Đảm bảo icon luôn nằm trên */
+    }
 
-#banner-section .input-group input[type="text"],
-#banner-section .input-group select {
-  padding: 10px 15px 10px 40px;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  width: 250px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+    /* Ô tìm kiếm */
+    #banner-section .input-group input[type="text"] {
+        padding: 10px 15px 10px 40px; /* Tạo khoảng trống cho icon */
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        width: 400px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-#banner-section .input-group input::placeholder {
-  color: #aaa;
-}
+    #banner-section .input-group input::placeholder {
+        color: #aaa;
+    }
 
-#banner-section .search-filter-wrap .search-job-btn {
-  padding: 10px 20px;
-  background-color: #ff5722;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
+    /* Dropdown khu vực */
+    #banner-section .input-group select {
+        padding: 10px 15px 10px 40px; /* Tạo khoảng trống cho icon */
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        width: 200px;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        appearance: none; /* Xóa kiểu mặc định của dropdown */
+    }
 
-#banner-section .search-filter-wrap .search-job-btn:hover {
-  background-color: #e64a19;
-}
+    #banner-section .input-group select option {
+        padding: 10px;
+    }
+
+    /* Nút tìm kiếm */
+    #banner-section .search-filter-wrap .search-job-btn {
+        padding: 10px 30px;
+        background-color: #ff5722;
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    #banner-section .search-filter-wrap .search-job-btn:hover {
+        background-color: #e64a19;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+        #banner-section .search-filter-wrap {
+            flex-wrap: wrap;
+        }
+        #banner-section .input-group input[type="text"],
+        #banner-section .input-group select {
+            width: 100%;
+        }
+        #banner-section .search-job-btn {
+            width: 100%;
+        }
+    }
 </style>
+
 <?php
 /**
  * Banner Section
@@ -84,15 +118,15 @@ if ( $ed_banner && has_custom_header() ) { ?>
                                 echo '<div style="text-align:left;" class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
                             }
                         ?>
-                      <div class="form-wrap">
-    <form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="search-form">
+                     <div class="form-wrap">
+    <form action="<?php echo esc_url(home_url('/')); ?>" method="get" class="search-form">
         <div class="search-filter-wrap">
-            <!-- Search input -->
+            <!-- Ô tìm kiếm -->
             <div class="input-group">
                 <span class="icon"><i class="fas fa-search"></i></span>
-                <input type="text" name="s" placeholder="<?php esc_attr_e( 'Search for jobs, companies, skills', 'jobscout' ); ?>" />
+                <input type="text" name="s" placeholder="<?php esc_attr_e('Search for jobs, companies, skills', 'jobscout'); ?>" />
             </div>
-            <!-- Location dropdown -->
+            <!-- Dropdown khu vực -->
             <div class="input-group search_location">
                 <?php
                 global $wpdb;
@@ -101,11 +135,11 @@ if ( $ed_banner && has_custom_header() ) { ?>
                         FROM `wp_postmeta` 
                         WHERE `meta_key` LIKE '%location%' 
                         ORDER BY location";
-                $data = $wpdb->get_results($sql); // Không cần prepare vì không có tham số động.
+                $data = $wpdb->get_results($sql); 
                 ?>
                 <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
                 <select id="search_location" name="search_location">
-                    <option value=""><?php esc_html_e( 'Khu vực', 'jobscout' ); ?></option>
+                    <option value=""><?php esc_html_e('Khu vực', 'jobscout'); ?></option>
                     <?php if ($data): ?>
                         <?php foreach ($data as $value): ?>
                             <option value="<?php echo esc_attr($value->location); ?>">
@@ -115,9 +149,9 @@ if ( $ed_banner && has_custom_header() ) { ?>
                     <?php endif; ?>
                 </select>
             </div>
-            <!-- Search button -->
+            <!-- Nút tìm kiếm -->
             <button type="submit" class="search-job-btn">
-                <?php esc_html_e( 'Search Job', 'jobscout' ); ?>
+                <?php esc_html_e('SEARCH JOB', 'jobscout'); ?>
             </button>
         </div>
     </form>
