@@ -6,7 +6,7 @@
  */
 
 $ed_banner         = get_theme_mod( 'ed_banner_section', true );
-$banner_title      = get_theme_mod( 'banner_title', __( 'Aim Higher, Dream Bigger 2', 'jobscout' ) );
+$banner_title      = get_theme_mod( 'banner_title', __( 'Find Your Dream Jobs', 'jobscout' ) );
 $banner_subtitle   = get_theme_mod( 'banner_subtitle', __( 'Each month, more than 7 million JobScout turn to website in their search for work, making over 160,000 applications every day.', 'jobscout' ) );
 $find_a_job_link   = get_option( 'job_manager_jobs_page_id', 0 );
         
@@ -19,22 +19,7 @@ $sql = "SELECT DISTINCT SUBSTRING_INDEX(`meta_value`,',',-1) as location FROM `w
 $data = $wpdb->get_results($wpdb->prepare($sql));											
 ?>											
 											
-<div class="search_location">											
-<?php											
-global $wpdb;											
-$table  = $wpdb->prefix . 'postmeta';											
-$sql = "SELECT DISTINCT SUBSTRING_INDEX(`meta_value`,',',-1) as location FROM `wp_postmeta` WHERE `meta_key` like '%location%' ORDER BY location";											
-$data = $wpdb->get_results($wpdb->prepare($sql));											
-?>											
-											
-<select id="search_location" name="search_location" value="Khu vực">											
-<option value="">Khu vực</option>											
-<?php foreach ($data as $value) : ?>											
-<option value="<?php echo $value->location; ?>"><?php echo $value->location; ?></option>											
-<?php endforeach ?>											
-</select>											
-											
-</div>											
+										
 										
 											
 </div>											
@@ -43,7 +28,7 @@ $data = $wpdb->get_results($wpdb->prepare($sql));
             <?php the_custom_header_markup(); ?>
             <div class="banner-caption">
                 <div class="container">
-                    <div class="caption-inner">
+                    <div class="caption-inner"  style="text-align: left;";>
                         <?php 
                             if( $banner_title ) echo '<h2 class="title">' . esc_html( $banner_title ) . '</h2>';
                             if( $banner_subtitle ) echo '<div class="description">' . wpautop( wp_kses_post( $banner_subtitle ) ) . '</div>';
