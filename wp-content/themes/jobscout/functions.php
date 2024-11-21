@@ -86,3 +86,18 @@ if( jobscout_is_woocommerce_activated() ){
 if( jobscout_is_wp_job_manager_activated() ) :
 	require get_template_directory() . '/inc/wp-job-manager-filters.php';
 endif;
+
+/**
+ * Tùy chỉnh nút Load More Jobs
+ */
+function customize_load_more_button() {
+    ?>
+    <script>
+        jQuery(document).ready(function($) {
+            // Thay đổi nội dung nút
+            $('.load_more_jobs strong').text('VIEW MORE JOBS');
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'customize_load_more_button');
