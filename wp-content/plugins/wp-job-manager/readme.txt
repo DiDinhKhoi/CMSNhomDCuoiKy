@@ -1,10 +1,10 @@
 === WP Job Manager ===
 Contributors: mikejolley, automattic, adamkheckler, alexsanford1, annezazu, cena, chaselivingston, csonnek, davor.altman, donnapep, donncha, drawmyface, erania-pinnera, fjorgemota, jacobshere, jakeom, jeherve, jenhooks, jgs, jonryan, kraftbj, lamdayap, lschuyler, macmanx, nancythanki, orangesareorange, rachelsquirrel, renathoc, ryancowles, richardmtl, scarstocea
-Tags: jobs, careers, company, hiring, job board
-Requires at least: 6.4
-Tested up to: 6.6
+Tags: job manager, job listing, job board, job management, job lists, job list, job, jobs, company, hiring, employment, employer, employees, candidate, freelance, internship, job listings, positions, board, application, hiring, listing, manager, recruiting, recruitment, talent
+Requires at least: 6.1
+Tested up to: 6.4
 Requires PHP: 7.2
-Stable tag: 2.4.0
+Stable tag: 2.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,19 +12,19 @@ Create a careers page for your company website, or build a public job board for 
 
 == Description ==
 
-WP Job Manager is a **lightweight** job listing plugin for adding job board functionality to your WordPress site. Being shortcode based, it can work with any theme (given a bit of CSS styling) and is really simple to setup.
+WP Job Manager is a **lightweight** job listing plugin for adding job-board like functionality to your WordPress site. Being shortcode based, it can work with any theme (given a bit of CSS styling) and is really simple to setup.
 
 = Features =
 
 * Add, manage, and categorize job listings using the familiar WordPress UI.
+* Post jobs on your own site, then promote them across a worldwide job network — on LinkedIn, Indeed and more.
 * Searchable & filterable ajax powered job listings added to your pages via shortcodes.
 * Frontend forms for guests and registered users to submit & manage job listings.
 * Allow job listers to preview their listing before it goes live. The preview matches the appearance of a live job listing.
 * Each listing can be tied to an email or website address so that job seekers can apply to the jobs.
 * Searches also display RSS links to allow job seekers to be alerted to new jobs matching their search.
 * Allow logged in employers to view, edit, mark filled, or delete their active job listings.
-* Job statistics for employers about job listing views and search impressions.
-* Developer friendly code - Custom post types, endpoints & template files.
+* Developer friendly code - Custom Post Types, endpoints & template files.
 
 The plugin comes with several shortcodes to output jobs in various formats, and since its built with Custom Post Types you are free to extend it further through themes.
 
@@ -36,7 +36,7 @@ Documentation for the core plugin and extensions can be found [on the docs site 
 
 = Demo =
 
-For a real-life example site, check out [jobs.blog](https://jobs.blog), built by the WP Job Manager team! To try out the plugin in an expendable demo site, click the Live Preview button above.
+For a real-life example site, check out [jobs.blog](https://jobs.blog), built by the WP Job Manager team!
 
 = Extensions =
 
@@ -147,68 +147,57 @@ You can view (and contribute) translations via the [translate.wordpress.org](htt
 
 == Changelog ==
 
-### 2.4.0 - 2024-08-08
-* Fix job dashboard actions menu in Safari
-* Fix PHP 8.3 support
-* Remove support for Internet Explorer 11
-* Fix Wordpress 6.6 compatibility
-* Fix classic editor support for job listings
+### 2.1.0 - 2023-11-17
+* Fix: Remove public update endpoint and add nonce check (#2642)
 
-### 2.3.0 - 2024-04-29
+### 2.0.0 - 2023-11-17
+* Enhancement: Improve settings descriptions (#2639)
+* Enhancement: Add directApply in Google job schema (#2635)
+* Enhancement: Add 'Don't show this again' link to dismiss promote job modal in the editor (#2632)
+* Enhancement: Add landing pages for Applications and Resumes extensions (#2621)
+* Fix: Align actions in notices in the center (#2637)
+* Fix: Safeguard array in WP_Job_Manager_Settings::input_capabilities (#2631)
+* Fix: Escape menu titles and various admin labels (#2630)
+* Fix: Incorrectly duplicated string in settings (#2628)
+* Fix: Add array initialization to avoid warning (#2619)
+* Fix: Do not check for plugin updates when there are no plugins (#2605)
+* Change: Reorganize administration menu (#2621)
+* Change: Update naming from Add-ons to Extensions, Marketplace (#2621)
+
+### 1.42.0 - 2023-10-05
 New!
 
-* Job Statistics — enable insights like job listing page views, unique visits and search impressions to be collected and displayed to employers in the jobs dashboard.
-* Add Google reCAPTCHA v3 support
+* Easily promote job listings on Indeed, LinkedIn, and 1000s of job boards with JobTarget integration. See https://wpjobmanager.com/jobtarget for more information.
 
-Improvements: 
+Improvements:
 
-* New: Job statistics overlay
-* Change: Redesign job dashboard
-* Change: Allow job duplication in the job dashboard for any job 
-* Security: Don't return unpublished jobs only in the promote job endpoint
-* Fix renewals for WordPress.com licenses
-* Fix issues with rich e-mails on some e-mail providers
-* Fix e-mail styling in some e-mail clients  
-* Fix expiry date not showing up in backend editor
-* Fix: Add fallback to date format in case it's missing
-* Fix: Prevent past dates from being used in the datepicker
+* Fix: Only show file upload input for company logo when it's empty (#2569)
+* Fix: Fix error when showing admin notices (#2557)
+* Fix: Show the links (RSS, Reset) below search even when there are no results (#2454)
+* Tweak: Improve usage tracking for plugins (#2576)
 
 For developers:
 
-* Add filter to disable promoted jobs
-* Add placeholder options to select field
-* Job dashboard template has been rewritten
+* Fix: In forms, support dynamically added date inputs (#2573)
+* New: Allow plugins to override renewal values (#2566)
+* Tweak: Rename "licence" to "license" throughout codebase (#2554)
+* Fix: More efficient license checking for core add-ons (#2552)
 
-### 2.2.2 - 2024-02-15
-* Fix issue with rich e-mails on some e-mail providers (#2753)
-* Fix: 'featured_first' argument now works when 'show_filters' is set to false.
-* Improve checkbox and radio inputs for styled forms
+### 1.41.0 - 2023-06-10
+* Enhancement: Introduce listing renewals #2422
+* Enhancement: Allow searching multiple job locations at once #2433
+* Fix: Add check for job listing limit being 0 #2362
+* Fix: Trigger search when submitting search form #2457
+* Fix: Always show search actions #2454
+* Fix: Fix PHP 8.2 deprecations #2456
+* Fix: Make forms responsive #2453
+* Fix: Update $company_tagline check for PHP8+ #2430
+* Fix:  Update notice string from 'c' to 's' license spelling #2429
+* Change: Update WPJM logo #2482
+* Change: Add hook in job-submitted template #2458
+* Change: Run job_manager_job_submitted_content filter in every case #2474
+* Change: Update historical notices to use the new render_notice method. #2409
 
-### 2.2.1 - 2024-01-31
-* Fix PHP 7.x error for mixed returned type (#2726)
-
-### 2.2.0 - 2024-01-29
-New:
-
-* Allow scheduling listings during job submission — add an option to show a 'Scheduled Date' field in the job submission form
-* Add new [jobs] shortcode parameter, featured_first so you can ensure featured listings always show up on top.
-* Add support for user sessions without a full account (used in the Job Alerts extension)
-
-Changes:
-
-* Improve styling for rich text e-mails
-* Include plain text alternative for rich text e-mails for better compatibility
-* Store previous license when plugin is deactivated for easier reactivation later.
-* Update design for settings and marketplace pages
-
-Fixes:
-
-* Fix custom role permission issues (#2673)
-* Fix RSS, Reset, Add Alert links not showing on search page without a keyword
-* Improve PHP 8 support
-* Fix numeric settings field issues
-* Improve e-mail formatting and encoding, remove extra whitespace
-* Add file type validation and error message to company logo upload
-* Fix cache issue when marking jobs as filled/not filled via bulk actions
-* Do not emit warning when user with insufficient access to Job Manager menu tries to access wp-admin
+### 1.40.2 - 2023-05-26
+* Revert: Hide expired job listings from archives
 

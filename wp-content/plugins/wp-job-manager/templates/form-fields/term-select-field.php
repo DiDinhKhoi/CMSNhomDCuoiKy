@@ -8,30 +8,20 @@
  * @author      Automattic
  * @package     wp-job-manager
  * @category    Template
- * @version     2.3.0
- *
- * @var array $key Form field name.
- * @var array $field Form field data.
- *
+ * @version     1.31.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$placeholder = array_key_exists( 'placeholder', $field ) && ! empty( $field['placeholder'] ) ? $field['placeholder'] : esc_html__( 'Select an Option...', 'wp-job-manager' );
-$selected = null;
-
 // Get selected value.
 if ( isset( $field['value'] ) ) {
 	$selected = $field['value'];
 } elseif ( is_int( $field['default'] ) ) {
 	$selected = $field['default'];
-} elseif ( ! empty( $field['default'] ) ) {
-	$default = get_term_by( 'slug', $field['default'], $field['taxonomy'] );
-	if ( ! empty( $default ) ) {
-		$selected = $default->term_id;
-	}
+} elseif ( ! empty( $field['default'] ) && ( $term = get_term_by( 'slug', $field['default'], $field['taxonomy'] ) ) ) {
+	$selected = $term->term_id;
 } else {
 	$selected = '';
 }
@@ -41,18 +31,14 @@ if ( is_array( $selected ) ) {
 	$selected = current( $selected );
 }
 
-$args = [
-	'taxonomy'          => $field['taxonomy'],
-	'hierarchical'      => 1,
-	'show_option_all'   => false,
-	'option_none_value' => '',
-	'show_option_none'  => $placeholder,
-	'name'              => isset( $field['name'] ) ? $field['name'] : $key,
-	'orderby'           => 'name',
-	'selected'          => $selected,
-	'hide_empty'        => false,
-];
-
-wp_dropdown_categories( apply_filters( 'job_manager_term_select_field_wp_dropdown_categories_args', $args, $key, $field ) );
-
+wp_dropdown_categories( apply_filters( 'job_manager_term_select_field_wp_dropdown_categories_args', [
+	'taxonomy'         => $field['taxonomy'],
+	'hierarchical'     => 1,
+	'show_option_all'  => false,
+	'show_option_none' => $field['required'] ? '' : '-',
+	'name'             => isset( $field['name'] ) ? $field['name'] : $key,
+	'orderby'          => 'name',
+	'selected'         => $selected,
+	'hide_empty'       => false
+], $key, $field ) );
 if ( ! empty( $field['description'] ) ) : ?><small class="description"><?php echo wp_kses_post( $field['description'] ); ?></small><?php endif; ?>

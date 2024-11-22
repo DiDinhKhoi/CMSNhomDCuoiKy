@@ -66,7 +66,7 @@ require get_template_directory() . '/inc/metabox.php';
 /**
  * Getting Started
 */
-require get_template_directory() . '/inc/dashboard/dashboard.php';
+require get_template_directory() . '/inc/getting-started/getting-started.php';
 
 /**
  * Plugin Recommendation

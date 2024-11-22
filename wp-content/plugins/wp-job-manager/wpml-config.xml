@@ -4,7 +4,6 @@
   </custom-types>
   <taxonomies>
     <taxonomy translate="1">job_listing_type</taxonomy>
-	<taxonomy translate="1">job_listing_category</taxonomy>
   </taxonomies>
   <custom-fields>
     <custom-field action="copy">_filled</custom-field>

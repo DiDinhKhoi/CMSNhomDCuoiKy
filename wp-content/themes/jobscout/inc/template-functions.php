@@ -254,7 +254,7 @@ if( ! function_exists( 'jobscout_entry_header' ) ) :
  * Entry Header
 */
 function jobscout_entry_header(){ ?>
-    <header class="entry-header">
+    <header class="entry-header" style="padding: 0px !important">
         <?php 
             $ed_cat_single = get_theme_mod( 'ed_category', false );
             $hide_author   = get_theme_mod( 'ed_post_author', false );
@@ -265,8 +265,8 @@ function jobscout_entry_header(){ ?>
             }else{
                 if( 'post' === get_post_type() ){
                     echo '<div class="entry-meta">';
-                    if( ! $hide_author ) jobscout_posted_by();
-                    if( ! $hide_date ) jobscout_posted_on();
+                    // if( ! $hide_author ) jobscout_posted_by();
+                    // if( ! $hide_date ) jobscout_posted_on();
                     echo '</div>';
                 }
             }
@@ -291,7 +291,7 @@ if( ! function_exists( 'jobscout_entry_content' ) ) :
 */
 function jobscout_entry_content(){ 
     $ed_excerpt = get_theme_mod( 'ed_excerpt', true ); ?>
-    <div class="entry-content" itemprop="text">
+    <div class="entry-content" itemprop="text" style="padding: 18px 0;">
 		<?php
 			if( is_singular() || ! $ed_excerpt || ( get_post_format() != false ) ){
                 the_content();    
@@ -300,7 +300,13 @@ function jobscout_entry_content(){
     				'after'  => '</div>',
     			) );
             }else{
-                the_excerpt();
+                // the_excerpt();
+                // $excerpt = get_the_excerpt();
+                // $excerpt = wp_trim_words(the_excerpt(), 30, '.');
+                // echo $excerpt;
+                $excerpt = get_the_excerpt();
+                $excerpt = wp_trim_words($excerpt, 15, '.');
+                echo $excerpt;
             }
 		?>
 	</div><!-- .entry-content -->
@@ -327,34 +333,35 @@ function jobscout_entry_footer(){
 			}
             
             if( is_front_page() || is_home() || is_search() || is_archive() ){
-                echo '<a href="' . esc_url( get_the_permalink() ) . '" class="readmore-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.207 8.58"><defs><style>.c{fill:none;stroke:#2ace5e;}</style></defs><g transform="translate(-701.5 -958.173)"><path class="c" d="M-9326.909-9204.917l-3.937,3.937,3.937,3.937" transform="translate(-8613.846 -8238.518) rotate(180)"/><line class="c" x2="15.154" transform="translate(701.5 962.426)"/></g></svg>' . esc_html( $readmore ) . '</a>';    
+                echo '<a href="' . esc_url( get_the_permalink() ) . 
+                '" class="readmore-link" style="color: #EA751E;text-decoration: none;font-weight: 700;">' . esc_html( $readmore ) . '</a>';    
             }
 
-            if( is_single() ) echo '<div class="entry-footer-right">';
-            if( 'post' === get_post_type() && is_single() ){
-                if( ! $ed_post_date ) jobscout_posted_on( true );
-                jobscout_comment_count();
-            }
+            // if( is_single() ) echo '<div class="entry-footer-right">';
+            // if( 'post' === get_post_type() && is_single() ){
+            //     if( ! $ed_post_date ) jobscout_posted_on( true );
+            //     jobscout_comment_count();
+            // }
             
-            if( get_edit_post_link() ){
-                edit_post_link(
-                    sprintf(
-                        wp_kses(
-                            /* translators: %s: Name of current post. Only visible to screen readers */
-                            __( 'Edit <span class="screen-reader-text">%s</span>', 'jobscout' ),
-                            array(
-                                'span' => array(
-                                    'class' => array(),
-                                ),
-                            )
-                        ),
-                        get_the_title()
-                    ),
-                    '<span class="edit-link">',
-                    '</span>'
-                );
-            }
-            if( is_single() ) echo '</div>';
+            // if( get_edit_post_link() ){
+            //     edit_post_link(
+            //         sprintf(
+            //             wp_kses(
+            //                 /* translators: %s: Name of current post. Only visible to screen readers */
+            //                 __( 'Edit <span class="screen-reader-text">%s</span>', 'jobscout' ),
+            //                 array(
+            //                     'span' => array(
+            //                         'class' => array(),
+            //                     ),
+            //                 )
+            //             ),
+            //             get_the_title()
+            //         ),
+            //         '<span class="edit-link">',
+            //         '</span>'
+            //     );
+            // }
+            // if( is_single() ) echo '</div>';
 		?>
 	</footer><!-- .entry-footer -->
 	<?php 
@@ -410,20 +417,20 @@ function jobscout_navigation(){
     		'category'
     	); 
         
-        if( $previous || $next ){?>            
-            <nav class="navigation post-navigation" role="navigation">
-    			<h2 class="screen-reader-text"><?php esc_html_e( 'Post Navigation', 'jobscout' ); ?></h2>
-    			<div class="nav-links">
-    				<?php
-                        if( $previous ) echo $previous;
-                        if( $next ) echo $next;
-                    ?>
-    			</div>
-    		</nav>        
-            <?php
-        }
+        // if( $previous || $next ){?>            
+        //     <nav class="navigation post-navigation" role="navigation">
+    	// 		<h2 class="screen-reader-text"><?php esc_html_e( 'Post Navigation', 'jobscout' ); ?></h2>
+    	// 		<div class="nav-links">
+    	// 			<?php
+        //                 if( $previous ) echo $previous;
+        //                 if( $next ) echo $next;
+        //             ?>
+    	// 		</div>
+    	// 	</nav>        
+        //     <?php
+        // }
     }else{
-        the_posts_navigation();
+        // the_posts_navigation();
     }
 }
 endif;

@@ -16,7 +16,7 @@ $ed_blog      = get_theme_mod( 'ed_blog', true );
 $args = array(
     'post_type'           => 'post',
     'post_status'         => 'publish',
-    'posts_per_page'      => 3,
+    'posts_per_page'      => 4,
     'ignore_sticky_posts' => true
 );
 
@@ -26,8 +26,9 @@ if( $ed_blog && ( $blog_heading || $sub_title || $qry->have_posts() ) ){ ?>
 <section id="blog-section" class="article-section">
 	<div class="container">
         <?php 
-            if( $blog_heading ) echo '<h2 class="section-title">' . esc_html( $blog_heading ) . '</h2>';
-            if( $sub_title ) echo '<div class="section-desc">' . wpautop( wp_kses_post( $sub_title ) ) . '</div>'; 
+            if ($blog_heading) echo '<h2 class="section-title" style="letter-spacing: 2px;font-weight:700;">NEWEST BLOG ENTRIES</h2>';
+            // if( $blog_heading ) echo '<h2 class="section-title">' . esc_html( $blog_heading ) . '</h2>';
+            // if( $sub_title ) echo '<div class="section-desc">' . wpautop( wp_kses_post( $sub_title ) ) . '</div>'; 
         ?>
         
         <?php if( $qry->have_posts() ){ ?>
@@ -35,7 +36,7 @@ if( $ed_blog && ( $blog_heading || $sub_title || $qry->have_posts() ) ){ ?>
     			<?php 
                 while( $qry->have_posts() ){
                     $qry->the_post(); ?>
-                    <article class="post">
+                    <article class="post" style="display: flex; background: #fff;box-shadow: none;border-radius: unset;">
         				<figure class="post-thumbnail">
                             <a href="<?php the_permalink(); ?>" class="post-thumbnail">
                             <?php 
@@ -48,15 +49,21 @@ if( $ed_blog && ( $blog_heading || $sub_title || $qry->have_posts() ) ){ ?>
                             </a>
                         </figure>
                         <header class="entry-header">
-                            <div class="entry-meta">
+                            <!-- <div class="entry-meta">
                                 <?php 
                                     if( ! $hide_author ) jobscout_posted_by(); 
                                     if( ! $hide_date ) jobscout_posted_on();
                                 ?> 
-                            </div>
+                            </div> -->
                             <h3 class="entry-title">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                             </h3>
+                            <?php
+                                $excerpt = get_the_excerpt();
+                                $excerpt = wp_trim_words($excerpt, 10, '.');
+                                echo '<p>' . $excerpt . '</p>';
+                            ?>
+                            <a class="" href="<?php the_permalink(); ?>" style="color: #EA751E;text-decoration: none;font-weight: 500;"><strong>Read More</strong></a>
                         </header>
         			</article>			
         			<?php 
@@ -65,11 +72,11 @@ if( $ed_blog && ( $blog_heading || $sub_title || $qry->have_posts() ) ){ ?>
                 ?>
     		</div><!-- .article-wrap -->
     		
-            <?php if( $blog && $label ){ ?>
-                <div class="btn-wrap">
-        			<a href="<?php the_permalink( $blog ); ?>" class="btn"><?php echo esc_html( $label ); ?></a>
-        		</div>
-            <?php } ?>
+                <!-- <?php if( $blog && $label ){ ?>
+                    <div class="btn-wrap">
+                        <a href="<?php the_permalink( $blog ); ?>" class="btn"><?php echo esc_html( $label ); ?></a>
+                    </div>
+                <?php } ?> -->
         
         <?php } ?>
 	</div>

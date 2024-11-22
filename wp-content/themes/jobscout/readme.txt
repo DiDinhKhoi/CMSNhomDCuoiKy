@@ -1,10 +1,10 @@
 === JobScout ===
 
 Contributors: raratheme
-Requires at least: 6.2
-Requires PHP: 7.3
-Tested up to: 6.6
-Stable tag: 1.1.7
+Requires at least: 4.7
+Requires PHP: 5.6
+Tested up to: 6.0
+Stable tag: 1.1.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: blog, one-column, two-columns, right-sidebar, left-sidebar, footer-widgets, custom-background, custom-header, custom-menu, custom-logo, featured-images, threaded-comments, full-width-template, rtl-language-support, translation-ready, theme-options, e-commerce
@@ -80,15 +80,6 @@ All other images including icon image and images used in customizer settings are
 
 == Changelog ==
     
-    1.1.7 - August 09, 2024
-    * Update: New dashboard has been implemented for better user experience.
-
-    1.1.6 - Feb 8, 2024
-    * Update: Admin ajax request issue solved.
-
-    1.1.5 - January 31, 2024
-    * Update: Added nonce to the custom admin notice to avoid CSRF vulnerability.
-
     1.1.4
     * Update: Added job category placeholder for job search.
     * Update: Load google font locally.

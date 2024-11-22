@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Methods for cleaning up all plugin data.
  *
@@ -21,37 +20,27 @@ class WP_Job_Manager_Data_Cleaner {
 	/**
 	 * Custom post types to be deleted.
 	 *
-	 * @var array
+	 * @var $custom_post_types
 	 */
-	private const CUSTOM_POST_TYPES = [
-		\WP_Job_Manager_Post_Types::PT_LISTING,
-		\WP_Job_Manager_Post_Types::PT_GUEST_USER,
-	];
-
-	/**
-	 * Custom tables to be deleted.
-	 *
-	 * @var array
-	 */
-	private const CUSTOM_TABLES = [
-		'wpjm_stats',
+	private static $custom_post_types = [
+		'job_listing',
 	];
 
 	/**
 	 * Taxonomies to be deleted.
 	 *
-	 * @var array
+	 * @var $taxonomies
 	 */
-	private const TAXONOMIES = [
-		\WP_Job_Manager_Post_Types::TAX_LISTING_CATEGORY,
-		\WP_Job_Manager_Post_Types::TAX_LISTING_TYPE,
+	private static $taxonomies = [
+		'job_listing_category',
+		'job_listing_type',
 	];
 
 	/** Cron jobs to be unscheduled.
 	 *
-	 * @var array
+	 * @var $cron_jobs
 	 */
-	private const CRON_JOBS = [
+	private static $cron_jobs = [
 		'job_manager_check_for_expired_jobs',
 		'job_manager_delete_old_previews',
 		'job_manager_email_daily_notices',
@@ -64,9 +53,9 @@ class WP_Job_Manager_Data_Cleaner {
 	/**
 	 * Options to be deleted.
 	 *
-	 * @var array
+	 * @var $options
 	 */
-	private const OPTIONS = [
+	private static $options = [
 		'wp_job_manager_version',
 		'job_manager_installed_terms',
 		'wpjm_permalinks',
@@ -131,9 +120,9 @@ class WP_Job_Manager_Data_Cleaner {
 	/**
 	 * Site options to be deleted.
 	 *
-	 * @var array
+	 * @var $site_options
 	 */
-	private const SITE_OPTIONS = [
+	private static $site_options = [
 		'job_manager_helper',
 	];
 
@@ -141,9 +130,9 @@ class WP_Job_Manager_Data_Cleaner {
 	 * Transient names (as MySQL regexes) to be deleted. The prefixes
 	 * "_transient_" and "_transient_timeout_" will be prepended.
 	 *
-	 * @var array
+	 * @var $transients
 	 */
-	private const TRANSIENTS = [
+	private static $transients = [
 		'_job_manager_activation_redirect', // Legacy transient that should still be removed.
 		'get_job_listings-transient-version',
 		'jm_.*',
@@ -153,42 +142,42 @@ class WP_Job_Manager_Data_Cleaner {
 	/**
 	 * Role to be removed.
 	 *
-	 * @var array
+	 * @var $role
 	 */
-	private const ROLE = 'employer';
+	private static $role = 'employer';
 
 	/**
 	 * Capabilities to be deleted.
 	 *
-	 * @var array
+	 * @var $caps
 	 */
-	private const CAPS = [
-		\WP_Job_Manager_Post_Types::CAP_MANAGE_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_EDIT_LISTING,
-		\WP_Job_Manager_Post_Types::CAP_READ_LISTING,
-		\WP_Job_Manager_Post_Types::CAP_DELETE_LISTING,
-		\WP_Job_Manager_Post_Types::CAP_EDIT_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_EDIT_OTHERS_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_PUBLISH_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_READ_PRIVATE_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_DELETE_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_DELETE_PRIVATE_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_DELETE_PUBLISHED_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_DELETE_OTHERS_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_EDIT_PRIVATE_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_EDIT_PUBLISHED_LISTINGS,
-		\WP_Job_Manager_Post_Types::CAP_MANAGE_LISTING_TERMS,
-		\WP_Job_Manager_Post_Types::CAP_EDIT_LISTING_TERMS,
-		\WP_Job_Manager_Post_Types::CAP_DELETE_LISTING_TERMS,
-		\WP_Job_Manager_Post_Types::CAP_ASSIGN_LISTING_TERMS,
+	private static $caps = [
+		'manage_job_listings',
+		'edit_job_listing',
+		'read_job_listing',
+		'delete_job_listing',
+		'edit_job_listings',
+		'edit_others_job_listings',
+		'publish_job_listings',
+		'read_private_job_listings',
+		'delete_job_listings',
+		'delete_private_job_listings',
+		'delete_published_job_listings',
+		'delete_others_job_listings',
+		'edit_private_job_listings',
+		'edit_published_job_listings',
+		'manage_job_listing_terms',
+		'edit_job_listing_terms',
+		'delete_job_listing_terms',
+		'assign_job_listing_terms',
 	];
 
 	/**
 	 * User meta key names to be deleted.
 	 *
-	 * @var array
+	 * @var array $user_meta_keys
 	 */
-	private const USER_META_KEYS = [
+	private static $user_meta_keys = [
 		'_company_logo',
 		'_company_name',
 		'_company_website',
@@ -204,7 +193,6 @@ class WP_Job_Manager_Data_Cleaner {
 	 */
 	public static function cleanup_all() {
 		self::cleanup_custom_post_types();
-		self::cleanup_custom_tables();
 		self::cleanup_taxonomies();
 		self::cleanup_pages();
 		self::cleanup_cron_jobs();
@@ -221,7 +209,7 @@ class WP_Job_Manager_Data_Cleaner {
 	 * @access private
 	 */
 	private static function cleanup_custom_post_types() {
-		foreach ( self::CUSTOM_POST_TYPES as $post_type ) {
+		foreach ( self::$custom_post_types as $post_type ) {
 			$items = get_posts(
 				[
 					'post_type'   => $post_type,
@@ -242,29 +230,6 @@ class WP_Job_Manager_Data_Cleaner {
 	}
 
 	/**
-	 * Cleanup data for custom tables.
-	 *
-	 * @return void
-	 */
-	private static function cleanup_custom_tables() {
-		global $wpdb;
-
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- We need to delete the custom tables.
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- We don't cache DROP TABLE.
-		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder -- %i is supported since WP 6.2.
-		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- %i is supported since WP 6.2.
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.SchemaChange -- We really need to delete the custom tables.
-		foreach ( self::CUSTOM_TABLES as $custom_table ) {
-			$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $wpdb->prefix . $custom_table ) );
-		}
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching
-		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder
-		// phpcs:enable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.SchemaChange
-	}
-
-	/**
 	 * Cleanup data for taxonomies.
 	 *
 	 * @access private
@@ -274,7 +239,7 @@ class WP_Job_Manager_Data_Cleaner {
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		foreach ( self::TAXONOMIES as $taxonomy ) {
+		foreach ( self::$taxonomies as $taxonomy ) {
 			$terms = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT term_id, term_taxonomy_id FROM $wpdb->term_taxonomy WHERE taxonomy = %s",
@@ -330,7 +295,7 @@ class WP_Job_Manager_Data_Cleaner {
 	 * @access private
 	 */
 	private static function cleanup_options() {
-		foreach ( self::OPTIONS as $option ) {
+		foreach ( self::$options as $option ) {
 			delete_option( $option );
 		}
 	}
@@ -341,7 +306,7 @@ class WP_Job_Manager_Data_Cleaner {
 	 * @access private
 	 */
 	private static function cleanup_site_options() {
-		foreach ( self::SITE_OPTIONS as $option ) {
+		foreach ( self::$site_options as $option ) {
 			delete_site_option( $option );
 		}
 	}
@@ -357,7 +322,7 @@ class WP_Job_Manager_Data_Cleaner {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 		foreach ( [ '_transient_', '_transient_timeout_' ] as $prefix ) {
-			foreach ( self::TRANSIENTS as $transient ) {
+			foreach ( self::$transients as $transient ) {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM $wpdb->options WHERE option_name RLIKE %s",
@@ -389,11 +354,11 @@ class WP_Job_Manager_Data_Cleaner {
 		$users = get_users( [] );
 		foreach ( $users as $user ) {
 			self::remove_all_job_manager_caps( $user );
-			$user->remove_role( self::ROLE );
+			$user->remove_role( self::$role );
 		}
 
 		// Remove role.
-		remove_role( self::ROLE );
+		remove_role( self::$role );
 	}
 
 	/**
@@ -402,7 +367,7 @@ class WP_Job_Manager_Data_Cleaner {
 	 * @param (WP_User|WP_Role) $object the user or role object.
 	 */
 	private static function remove_all_job_manager_caps( $object ) {
-		foreach ( self::CAPS as $cap ) {
+		foreach ( self::$caps as $cap ) {
 			$object->remove_cap( $cap );
 		}
 	}
@@ -415,7 +380,7 @@ class WP_Job_Manager_Data_Cleaner {
 	private static function cleanup_user_meta() {
 		global $wpdb;
 
-		foreach ( self::USER_META_KEYS as $meta_key ) {
+		foreach ( self::$user_meta_keys as $meta_key ) {
 			// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Delete data across all users.
 			$wpdb->delete( $wpdb->usermeta, [ 'meta_key' => $meta_key ] );
 			// phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
@@ -429,7 +394,7 @@ class WP_Job_Manager_Data_Cleaner {
 	 * @access private
 	 */
 	private static function cleanup_cron_jobs() {
-		foreach ( self::CRON_JOBS as $job ) {
+		foreach ( self::$cron_jobs as $job ) {
 			wp_clear_scheduled_hook( $job );
 		}
 	}

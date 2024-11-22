@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The plugin bootstrap file
  *
@@ -15,7 +16,7 @@
  * Plugin Name:       RaraTheme Companion
  * Plugin URI:        https://wordpress.org/plugins/raratheme-companion
  * Description:       23 extremely useful custom widgets to create an engaging website.
- * Version:           1.4.3
+ * Version:           1.4.2
  * Author:            Rara Theme
  * Author URI:        https://raratheme.com/
  * License:           GPL-2.0+
@@ -29,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'RARATC_PLUGIN_VERSION', '1.4.3' );
+define( 'RARATC_PLUGIN_VERSION', '1.4.2' );
 define( 'RARATC_BASE_PATH', dirname( __FILE__ ) );
 define( 'RARATC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RARATC_FILE_URL', rtrim( plugin_dir_url( __FILE__ ), '/' ) );

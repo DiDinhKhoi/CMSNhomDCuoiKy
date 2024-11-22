@@ -463,12 +463,11 @@ if( ! function_exists( 'jobscout_admin_notice' ) ) :
 */
 function jobscout_admin_notice(){
     global $pagenow;
-    $theme_args     = wp_get_theme();
-    $meta           = get_option( 'jobscout_admin_notice' );
-    $name           = $theme_args->__get( 'Name' );
-    $current_screen = get_current_screen();
-    $dismissnonce   = wp_create_nonce( 'jobscout_admin_notice' );
-
+    $theme_args      = wp_get_theme();
+    $meta            = get_option( 'jobscout_admin_notice' );
+    $name            = $theme_args->__get( 'Name' );
+    $current_screen  = get_current_screen();
+    
     if( 'themes.php' == $pagenow && !$meta ){
         
         if( $current_screen->id !== 'dashboard' && $current_screen->id !== 'themes' ){
@@ -488,8 +487,8 @@ function jobscout_admin_notice(){
                 <div class="notice-text">
                     <h3><?php esc_html_e( 'Congratulations!', 'jobscout' ); ?></h3>
                     <p><?php printf( __( '%1$s is now installed and ready to use. Click below to see theme documentation, plugins to install and other details to get started.', 'jobscout' ), esc_html( $name ) ); ?></p>
-                    <p><a href="<?php echo esc_url( admin_url( 'themes.php?page=jobscout-dashboard' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Go to the dashboard.', 'jobscout' ); ?></a></p>
-                    <p class="dismiss-link"><strong><a href="?jobscout_admin_notice=1&_wpnonce=<?php echo esc_attr( $dismissnonce ); ?>"><?php esc_html_e( 'Dismiss', 'jobscout' ); ?></a></strong></p>
+                    <p><a href="<?php echo esc_url( admin_url( 'themes.php?page=jobscout-getting-started' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Go to the getting started.', 'jobscout' ); ?></a></p>
+                    <p class="dismiss-link"><strong><a href="?jobscout_admin_notice=1"><?php esc_html_e( 'Dismiss', 'jobscout' ); ?></a></strong></p>
                 </div>
             </div>
         </div>
@@ -503,13 +502,7 @@ if( ! function_exists( 'jobscout_update_admin_notice' ) ) :
  * Updating admin notice on dismiss
 */
 function jobscout_update_admin_notice(){
-
-    if (!current_user_can('manage_options')) {
-        return;
-    }
-
-    // Bail if the nonce doesn't check out
-    if ( isset( $_GET['jobscout_admin_notice'] ) && $_GET['jobscout_admin_notice'] = '1' && wp_verify_nonce( $_GET['_wpnonce'], 'jobscout_admin_notice' ) ) {
+    if ( isset( $_GET['jobscout_admin_notice'] ) && $_GET['jobscout_admin_notice'] = '1' ) {
         update_option( 'jobscout_admin_notice', true );
     }
 }

@@ -24,7 +24,8 @@ get_header(); ?>
         ?>
         
         <main id="main" class="site-main">
-
+			<div class="article-section">
+				<div class="article-wrap">
 		<?php
 		if ( have_posts() ) :
 
@@ -45,7 +46,8 @@ get_header(); ?>
 			get_template_part( 'template-parts/content', 'none' );
 
 		endif; ?>
-
+				</div>
+			</div>
 		</main><!-- #main -->
         
         <?php

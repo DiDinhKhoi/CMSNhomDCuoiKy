@@ -1,10 +1,10 @@
-=== Rara One Click Demo Import ===
+﻿=== Rara One Click Demo Import ===
 Contributors: raratheme
 Tags: import, content, demo, data, widgets, settings
-Requires at least: 6.0
-Tested up to: 6.6
-Requires PHP: 7.4
-Stable tag: 1.3.4
+Requires at least: 4.4.0
+Tested up to: 6.2.2
+Requires PHP: 5.6
+Stable tag: 1.3.3
 License: GPLv3 or later
 
 Make your website look like the live demo of the theme with a click!
@@ -112,10 +112,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 == Changelog ==
-
-= 1.3.4 =
-* Compatibility updates for WordPress 6.5
-* Fixes: Minor Bug Fixes.
 
 = 1.3.3 =
 * Compatibility updates for WordPress 6.2.2

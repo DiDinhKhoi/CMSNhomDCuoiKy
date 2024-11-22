@@ -9,8 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Pelago\Emogrifier\CssInliner;
-use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 /**
  * Base class for WP Job Manager's email notification system.
  *
@@ -85,7 +83,6 @@ final class WP_Job_Manager_Email_Notifications {
 	 */
 	public static function send_deferred_notifications() {
 		$email_notifications = self::get_email_notifications( true );
-
 		foreach ( self::$deferred_notifications as $email ) {
 			if (
 				! is_string( $email[0] )
@@ -100,8 +97,6 @@ final class WP_Job_Manager_Email_Notifications {
 
 			self::send_email( $email[0], new $email_class( $email_args, self::get_email_settings( $email_notification_key ) ) );
 		}
-
-		self::$deferred_notifications = [];
 	}
 
 	/**
@@ -166,8 +161,9 @@ final class WP_Job_Manager_Email_Notifications {
 		include_once JOB_MANAGER_PLUGIN_DIR . '/includes/emails/class-wp-job-manager-email-employer-expiring-job.php';
 		include_once JOB_MANAGER_PLUGIN_DIR . '/includes/emails/class-wp-job-manager-email-admin-expiring-job.php';
 
-		// Load Vendor Autoload.
-		require_once JOB_MANAGER_PLUGIN_DIR . '/vendor/autoload.php';
+		if ( ! class_exists( 'Emogrifier' ) && class_exists( 'DOMDocument' ) && version_compare( PHP_VERSION, '5.5', '>=' ) ) {
+			include_once JOB_MANAGER_PLUGIN_DIR . '/lib/emogrifier/class-emogrifier.php';
+		}
 	}
 
 	/**
@@ -276,7 +272,7 @@ final class WP_Job_Manager_Email_Notifications {
 			];
 		}
 
-		if ( get_option( 'job_manager_enable_types' ) && wp_count_terms( \WP_Job_Manager_Post_Types::TAX_LISTING_TYPE ) > 0 ) {
+		if ( get_option( 'job_manager_enable_types' ) && wp_count_terms( 'job_listing_type' ) > 0 ) {
 			$job_types = wpjm_get_the_job_types( $job );
 			if ( ! empty( $job_types ) ) {
 				$fields['job_type'] = [
@@ -286,7 +282,7 @@ final class WP_Job_Manager_Email_Notifications {
 			}
 		}
 
-		if ( get_option( 'job_manager_enable_categories' ) && wp_count_terms( \WP_Job_Manager_Post_Types::TAX_LISTING_CATEGORY ) > 0 ) {
+		if ( get_option( 'job_manager_enable_categories' ) && wp_count_terms( 'job_listing_category' ) > 0 ) {
 			$job_categories = wpjm_get_the_job_categories( $job );
 			if ( ! empty( $job_categories ) ) {
 				$fields['job_category'] = [
@@ -312,10 +308,9 @@ final class WP_Job_Manager_Email_Notifications {
 			];
 		}
 
-		$job_expires    = WP_Job_Manager_Post_Types::instance()->get_job_expiration( $job );
-		$wp_date_format = get_option( 'date_format' ) ?: JOB_MANAGER_DATE_FORMAT_FALLBACK;
+		$job_expires = WP_Job_Manager_Post_Types::instance()->get_job_expiration( $job );
 		if ( ! empty( $job_expires ) ) {
-			$job_expires_str       = wp_date( $wp_date_format, $job_expires->getTimestamp() );
+			$job_expires_str       = wp_date( get_option( 'date_format' ), $job_expires->getTimestamp() );
 			$fields['job_expires'] = [
 				'label' => __( 'Listing expires', 'wp-job-manager' ),
 				'value' => $job_expires_str,
@@ -471,7 +466,6 @@ final class WP_Job_Manager_Email_Notifications {
 				'label'        => false,
 				'std'          => self::get_email_setting_defaults( $email_notification_key ),
 				'settings'     => self::get_email_setting_fields( $email_notification_key ),
-				'track'        => 'bool',
 			];
 		}
 
@@ -602,7 +596,7 @@ final class WP_Job_Manager_Email_Notifications {
 
 		$job_ids = get_posts(
 			[
-				'post_type'      => \WP_Job_Manager_Post_Types::PT_LISTING,
+				'post_type'      => 'job_listing',
 				'post_status'    => 'publish',
 				'fields'         => 'ids',
 				'posts_per_page' => -1,
@@ -769,10 +763,6 @@ final class WP_Job_Manager_Email_Notifications {
 	 * @return bool
 	 */
 	private static function send_email( $email_notification_key, WP_Job_Manager_Email $email ) {
-
-		global $job_manager_doing_email;
-		$job_manager_doing_email = true;
-
 		if ( ! $email->is_valid() ) {
 			return false;
 		}
@@ -802,16 +792,7 @@ final class WP_Job_Manager_Email_Notifications {
 		$sent_count = 0;
 		foreach ( $send_to as $to_email ) {
 			$args['to'] = $to_email;
-
-			$is_plain_text_only = self::send_as_plain_text( $email_notification_key, $args );
-
-			$content_plain = self::get_email_content( $email_notification_key, $args, true );
-
-			if ( $is_plain_text_only ) {
-				$body = $content_plain;
-			} else {
-				$body = self::get_email_content( $email_notification_key, $args, false );
-			}
+			$content    = self::get_email_content( $email_notification_key, $args );
 
 			/**
 			 * Filter all email arguments for job manager notifications.
@@ -832,6 +813,10 @@ final class WP_Job_Manager_Email_Notifications {
 				$headers[] = 'CC: ' . $args['cc'];
 			}
 
+			if ( ! self::send_as_plain_text( $email_notification_key, $args ) ) {
+				$headers[] = 'Content-Type: text/html';
+			}
+
 			/**
 			 * Allows for short-circuiting the actual sending of email notifications.
 			 *
@@ -843,24 +828,14 @@ final class WP_Job_Manager_Email_Notifications {
 			 * @param string                $content                Email content.
 			 * @param array                 $headers                Email headers.
 			 */
-			if ( ! apply_filters( 'job_manager_email_do_send_notification', true, $email, $args, $body, $headers ) ) {
+			if ( ! apply_filters( 'job_manager_email_do_send_notification', true, $email, $args, $content, $headers ) ) {
 				continue;
 			}
 
-			$set_content_type = fn() => 'text/html';
-
-			if ( ! $is_plain_text_only ) {
-				add_filter( 'wp_mail_content_type', $set_content_type );
-			}
-
-			if ( wp_mail( $to_email, $args['subject'], $body, $headers, $args['attachments'] ) ) {
+			if ( wp_mail( $to_email, $args['subject'], $content, $headers, $args['attachments'] ) ) {
 				$sent_count++;
 			}
-
-			remove_filter( 'wp_mail_content_type', $set_content_type );
 		}
-
-		$job_manager_doing_email = false;
 
 		return $sent_count > 0;
 	}
@@ -871,12 +846,11 @@ final class WP_Job_Manager_Email_Notifications {
 	 * @access private
 	 *
 	 * @param string $email_notification_key Unique email notification key.
-	 * @param array  $args Arguments passed for generating email.
-	 * @param bool   $is_plain_text Whether to generate plain text or rich text content.
-	 *
+	 * @param array  $args                   Arguments passed for generating email.
 	 * @return string
 	 */
-	private static function get_email_content( $email_notification_key, $args, $is_plain_text ) {
+	private static function get_email_content( $email_notification_key, $args ) {
+		$plain_text = self::send_as_plain_text( $email_notification_key, $args );
 
 		ob_start();
 
@@ -886,16 +860,15 @@ final class WP_Job_Manager_Email_Notifications {
 		 * @since 1.31.0
 		 *
 		 * @param string $email_notification_key Unique email notification key.
-		 * @param array  $args Arguments passed for generating email.
-		 * @param bool   $is_plain_text True if sending plain text email.
+		 * @param array  $args                   Arguments passed for generating email.
+		 * @param bool   $plain_text             True if sending plain text email.
 		 */
-		do_action( 'job_manager_email_header', $email_notification_key, $args, $is_plain_text );
+		do_action( 'job_manager_email_header', $email_notification_key, $args, $plain_text );
 
-		if ( $is_plain_text ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Plain text e-mail.
-			echo wp_specialchars_decode( wp_strip_all_tags( $args['plain_content'] ) );
+		if ( $plain_text ) {
+			echo wp_kses_post( html_entity_decode( wptexturize( $args['plain_content'] ) ) );
 		} else {
-			echo wp_kses_post( ( $args['rich_content'] ) );
+			echo wp_kses_post( wpautop( wptexturize( $args['rich_content'] ) ) );
 		}
 
 		/**
@@ -904,13 +877,13 @@ final class WP_Job_Manager_Email_Notifications {
 		 * @since 1.31.0
 		 *
 		 * @param string $email_notification_key Unique email notification key.
-		 * @param array  $args Arguments passed for generating email.
-		 * @param bool   $is_plain_text True if sending plain text email.
+		 * @param array  $args                   Arguments passed for generating email.
+		 * @param bool   $plain_text             True if sending plain text email.
 		 */
-		do_action( 'job_manager_email_footer', $email_notification_key, $args, $is_plain_text );
+		do_action( 'job_manager_email_footer', $email_notification_key, $args, $plain_text );
 
 		$content = ob_get_clean();
-		if ( ! $is_plain_text ) {
+		if ( ! $plain_text ) {
 			$content = self::inject_styles( $content );
 		}
 
@@ -919,12 +892,12 @@ final class WP_Job_Manager_Email_Notifications {
 		 *
 		 * @since 1.31.0
 		 *
-		 * @param string $content Email content.
+		 * @param string $content                Email content.
 		 * @param string $email_notification_key Unique email notification key.
-		 * @param array  $args Arguments passed for generating email.
-		 * @param bool   $is_plain_text True if sending plain text email.
+		 * @param array  $args                   Arguments passed for generating email.
+		 * @param bool   $plain_text             True if sending plain text email.
 		 */
-		return apply_filters( 'job_manager_email_content', $content, $email_notification_key, $args, $is_plain_text );
+		return apply_filters( 'job_manager_email_content', $content, $email_notification_key, $args, $plain_text );
 	}
 
 	/**
@@ -934,11 +907,10 @@ final class WP_Job_Manager_Email_Notifications {
 	 * @return string
 	 */
 	private static function inject_styles( $content ) {
-		if ( class_exists( CssInliner::class ) ) {
+		if ( class_exists( 'Emogrifier' ) ) {
 			try {
-				$dom_document = CssInliner::fromHtml( $content )->inlineCss( self::get_styles() )->getDomDocument();
-				$content      = CssToAttributeConverter::fromDomDocument( $dom_document )->convertCssToVisualAttributes()->render();
-
+				$emogrifier = new Emogrifier( $content, self::get_styles() );
+				$content    = $emogrifier->emogrify();
 			} catch ( Exception $e ) {
 				trigger_error( 'Unable to inject styles into email notification: ' . $e->getMessage() ); // @codingStandardsIgnoreLine
 			}
@@ -949,12 +921,12 @@ final class WP_Job_Manager_Email_Notifications {
 	/**
 	 * Gets the CSS styles to be used in email notifications.
 	 *
-	 * @return string
+	 * @return bool|string
 	 */
 	private static function get_styles() {
 		$email_styles_template = self::locate_template_file( 'email-styles' );
 		if ( ! file_exists( $email_styles_template ) ) {
-			return '';
+			return false;
 		}
 		ob_start();
 		include $email_styles_template;

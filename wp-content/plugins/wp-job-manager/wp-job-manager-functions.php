@@ -34,7 +34,6 @@ if ( ! function_exists( 'get_job_listings' ) ) :
 				'filled'            => null,
 				'remote_position'   => null,
 				'fields'            => 'all',
-				'featured_first'    => 0,
 			]
 		);
 
@@ -56,7 +55,7 @@ if ( ! function_exists( 'get_job_listings' ) ) :
 		}
 
 		$query_args = [
-			'post_type'              => \WP_Job_Manager_Post_Types::PT_LISTING,
+			'post_type'              => 'job_listing',
 			'post_status'            => $post_status,
 			'ignore_sticky_posts'    => 1,
 			'offset'                 => absint( $args['offset'] ),
@@ -148,7 +147,7 @@ if ( ! function_exists( 'get_job_listings' ) ) :
 
 		if ( ! empty( $args['job_types'] ) ) {
 			$query_args['tax_query'][] = [
-				'taxonomy' => \WP_Job_Manager_Post_Types::TAX_LISTING_TYPE,
+				'taxonomy' => 'job_listing_type',
 				'field'    => 'slug',
 				'terms'    => $args['job_types'],
 			];
@@ -158,7 +157,7 @@ if ( ! function_exists( 'get_job_listings' ) ) :
 			$field                     = is_numeric( $args['search_categories'][0] ) ? 'term_id' : 'slug';
 			$operator                  = 'all' === get_option( 'job_manager_category_filter_type', 'all' ) && count( $args['search_categories'] ) > 1 ? 'AND' : 'IN';
 			$query_args['tax_query'][] = [
-				'taxonomy'         => \WP_Job_Manager_Post_Types::TAX_LISTING_CATEGORY,
+				'taxonomy'         => 'job_listing_category',
 				'field'            => $field,
 				'terms'            => array_values( $args['search_categories'] ),
 				'include_children' => 'AND' !== $operator,
@@ -181,22 +180,11 @@ if ( ! function_exists( 'get_job_listings' ) ) :
 			];
 		}
 
-		if ( isset( $args['featured_first'] ) ) {
-			$args['featured_first'] = filter_var( $args['featured_first'], FILTER_VALIDATE_BOOLEAN );
-		}
-
-		if ( true === $args['featured_first'] && 'featured' !== $args['orderby'] && 'rand_featured' !== $args['orderby'] ) {
-			$query_args['orderby'] = [
-				'menu_order'           => 'ASC',
-				$query_args['orderby'] => $query_args['order'],
-			];
-		}
-
 		$job_manager_keyword = sanitize_text_field( $args['search_keywords'] );
 
 		if ( ! empty( $job_manager_keyword ) && strlen( $job_manager_keyword ) >= apply_filters( 'job_manager_get_listings_keyword_length_threshold', 2 ) ) {
 			$query_args['s'] = $job_manager_keyword;
-			add_filter( 'posts_search', 'get_job_listings_keyword_search', 10, 2 );
+			add_filter( 'posts_search', 'get_job_listings_keyword_search' );
 		}
 
 		$query_args = apply_filters( 'job_manager_get_listings', $query_args, $args );
@@ -266,7 +254,7 @@ if ( ! function_exists( 'get_job_listings' ) ) :
 
 		do_action( 'after_get_job_listings', $query_args, $args );
 
-		remove_filter( 'posts_search', 'get_job_listings_keyword_search', 10 );
+		remove_filter( 'posts_search', 'get_job_listings_keyword_search' );
 
 		return $result;
 	}
@@ -303,179 +291,66 @@ if ( ! function_exists( 'get_job_listings_keyword_search' ) ) :
 	 * @since 1.21.0
 	 * @since 1.26.0 Moved from the `posts_clauses` filter to the `posts_search` to use WP Query's keyword
 	 *               search for `post_title` and `post_content`.
-	 * @since 2.4.0 Reimplemented to provide the same functionality with WP core search:
-	 *                 - Support for double quotes and negating terms (-).
-	 *                 - Breaks down terms into individual words.
-	 *                 - Meta and taxonomy name search happens together with search in title, excerpt and post content.
-	 *
-	 * @param string   $search   The search string.
-	 * @param WP_Query $wp_query The query.
-	 *
+	 * @param string $search
 	 * @return string
 	 */
-	function get_job_listings_keyword_search( $search, $wp_query ) {
-		global $wpdb;
+	function get_job_listings_keyword_search( $search ) {
+		global $wpdb, $job_manager_keyword;
 
-		if ( ! function_exists( 'job_manager_construct_secondary_conditions' ) && ! function_exists( 'job_manager_construct_post_conditions' ) ) {
-				/**
-				 * Constructs SQL clauses that return posts which have metas and terms that include or exclude the search term.
-				 *
-				 * @param string $search_term    The search term.
-				 * @param bool   $is_excluding   Whether posts should be excluded if they match the search terms.
-				 * @param string $wildcard_search The wildcard character or empty string for exact matches.
-				 *
-				 * @return array The SQL clauses.
-				 */
-			function job_manager_construct_secondary_conditions( $search_term, $is_excluding, $wildcard_search ) {
-				global $wpdb;
+		// Searchable Meta Keys: set to empty to search all meta keys.
+		$searchable_meta_keys = [
+			'_job_location',
+			'_company_name',
+			'_application',
+			'_company_name',
+			'_company_tagline',
+			'_company_website',
+			'_company_twitter',
+		];
 
-				if ( empty( $search_term ) ) {
-					return [];
-				}
+		$searchable_meta_keys = apply_filters( 'job_listing_searchable_meta_keys', $searchable_meta_keys );
 
-				$searchable_meta_keys = [
-					'_application',
-					'_company_name',
-					'_company_tagline',
-					'_company_website',
-					'_company_twitter',
-					'_job_location',
-				];
+		// Set Search DB Conditions.
+		$conditions = [];
 
-				/**
-				 * Filters the meta keys that are used in job search.
-				 *
-				 * @param array $searchable_meta_keys The meta keys.
-				 */
-				$searchable_meta_keys = apply_filters( 'job_listing_searchable_meta_keys', $searchable_meta_keys );
+		// Search Post Meta.
+		if ( apply_filters( 'job_listing_search_post_meta', true ) ) {
 
-				$not_string = $is_excluding ? 'NOT ' : '';
-				$conditions = [];
-				$meta_value = $wildcard_search . $wpdb->esc_like( $search_term ) . $wildcard_search;
-
-				/**
-				 * Can be used to disable searching post meta for job searches.
-				 *
-				 * @param bool $enable_meta_search Return false to disable meta search.
-				 */
-				if ( apply_filters( 'job_listing_search_post_meta', true ) ) {
-
-					// Only selected meta keys.
-					if ( $searchable_meta_keys ) {
-						$meta_keys = implode( "','", array_map( 'esc_sql', $searchable_meta_keys ) );
-						// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Variables are safe or escaped.
-						$conditions[] = $wpdb->prepare( "{$wpdb->posts}.ID {$not_string}IN ( SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key IN ( '{$meta_keys}' ) AND meta_value LIKE %s )", $meta_value );
-					} else {
-						// No meta keys defined, search all post meta value.
-						$conditions[] = $wpdb->prepare( "{$wpdb->posts}.ID {$not_string}IN ( SELECT post_id FROM {$wpdb->postmeta} WHERE meta_value LIKE %s )", $meta_value );
-						// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-					}
-				}
-
-				// Search taxonomy.
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Variables are safe or escaped.
-				$conditions[] = $wpdb->prepare( "{$wpdb->posts}.ID {$not_string}IN ( SELECT object_id FROM {$wpdb->term_relationships} AS tr LEFT JOIN {$wpdb->term_taxonomy} AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id LEFT JOIN {$wpdb->terms} AS t ON tt.term_id = t.term_id WHERE t.name LIKE %s )", $meta_value );
-
-				return $conditions;
-			}
-
-			/**
-			 * Constructs SQL clauses that return posts which include or exclude the search term in the provided columns.
-			 * The function replicates the functionality of WP_Query::parse_search.
-			 *
-			 * @see WP_Query::parse_search()
-			 *
-			 * @param string $search_term     The search term to match.
-			 * @param bool   $is_excluding    Whether posts that match the search term should be excluded.
-			 * @param string $wildcard_search The wildcard character or empty string for exact matches.
-			 * @param array  $search_columns   The columns to check.
-			 *
-			 * @return array The SQL clauses.
-			 */
-			function job_manager_construct_post_conditions( $search_term, $is_excluding, $wildcard_search, $search_columns ) {
-				global $wpdb;
-
-				if ( $is_excluding ) {
-					$like_op = 'NOT LIKE';
-				} else {
-					$like_op = 'LIKE';
-				}
-
-				$like = $wildcard_search . $wpdb->esc_like( $search_term ) . $wildcard_search;
-
-				$conditions = [];
-				foreach ( $search_columns as $search_column ) {
-					$search_column = esc_sql( $search_column );
-					//phpcs:disabled WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Variables are safe or escaped.
-					$conditions[] = $wpdb->prepare( "( {$wpdb->posts}.$search_column $like_op %s )", $like );
-				}
-
-				// Filter documented in WP_Query::get_posts.
-				$allow_query_attachment_by_filename = apply_filters( 'wp_allow_query_attachment_by_filename', false );
-				if ( ! empty( $allow_query_attachment_by_filename ) ) {
-					// sq1 is the wp_postmeta join for attachments in WP_Query::get_posts.
-					$conditions[] = $wpdb->prepare( "(sq1.meta_value $like_op %s)", $like );
-					//phpcs:enabled WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				}
-
-				return $conditions;
+			// Only selected meta keys.
+			if ( $searchable_meta_keys ) {
+				$conditions[] = "{$wpdb->posts}.ID IN ( SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key IN ( '" . implode( "','", array_map( 'esc_sql', $searchable_meta_keys ) ) . "' ) AND meta_value LIKE '%" . esc_sql( $job_manager_keyword ) . "%' )";
+			} else {
+				// No meta keys defined, search all post meta value.
+				$conditions[] = "{$wpdb->posts}.ID IN ( SELECT post_id FROM {$wpdb->postmeta} WHERE meta_value LIKE '%" . esc_sql( $job_manager_keyword ) . "%' )";
 			}
 		}
+
+		// Search taxonomy.
+		$conditions[] = "{$wpdb->posts}.ID IN ( SELECT object_id FROM {$wpdb->term_relationships} AS tr LEFT JOIN {$wpdb->term_taxonomy} AS tt ON tr.term_taxonomy_id = tt.term_taxonomy_id LEFT JOIN {$wpdb->terms} AS t ON tt.term_id = t.term_id WHERE t.name LIKE '%" . esc_sql( $job_manager_keyword ) . "%' )";
 
 		/**
-		 * This function aims to provide similar search functionality with WP core while also including meta and taxonomy terms
-		 * in the searched columns. The functionality of WP_Query::parse_search is replicated but with additional SQL
-		 * clauses which are generated in the job_manager_construct_secondary_conditions function.
+		 * Filters the conditions to use when querying job listings. Resulting array is joined with OR statements.
+		 *
+		 * @since 1.26.0
+		 *
+		 * @param array  $conditions          Conditions to join by OR when querying job listings.
+		 * @param string $job_manager_keyword Search query.
 		 */
-		$default_search_columns = [ 'post_title', 'post_excerpt', 'post_content' ];
-		$search_columns         = ! empty( $wp_query->query_vars['search_columns'] ) ? $wp_query->query_vars['search_columns'] : $default_search_columns;
-		if ( ! is_array( $search_columns ) ) {
-			$search_columns = [ $search_columns ];
-		}
-
-		// Filter documented in WP_Query::parse_search.
-		$search_columns = (array) apply_filters( 'post_search_columns', $search_columns, $wp_query->query_vars['s'], $wp_query );
-
-		// Use only supported search columns.
-		$search_columns = array_intersect( $search_columns, $default_search_columns );
-		if ( empty( $search_columns ) ) {
-			$search_columns = $default_search_columns;
-		}
-
-		// Search terms starting with the exclusion prefix should be removed from the job search results.
-		$exclusion_prefix = apply_filters( 'wp_query_search_exclusion_prefix', '-' );
-		$wildcard_search  = ! empty( $wp_query->query_vars['exact'] ) ? '' : '%';
-		$new_search       = '';
-		$searchand        = '';
-
-		foreach ( $wp_query->query_vars['search_terms'] as $search_term ) {
-			$is_excluding = $exclusion_prefix && str_starts_with( $search_term, $exclusion_prefix );
-
-			if ( $is_excluding ) {
-				$search_term = substr( $search_term, 1 );
-				$andor_op    = 'AND';
-			} else {
-				$andor_op = 'OR';
-			}
-
-			$conditions = job_manager_construct_post_conditions( $search_term, $is_excluding, $wildcard_search, $search_columns );
-			$conditions = array_merge( $conditions, job_manager_construct_secondary_conditions( $search_term, $is_excluding, $wildcard_search ) );
-
-			$new_search .= "$searchand(" . implode( " $andor_op ", $conditions ) . ')';
-
-			$searchand = ' AND ';
-		}
-
-		if ( ! empty( $new_search ) ) {
-			$new_search = " AND ({$new_search}) ";
-			if ( ! is_user_logged_in() ) {
-				$new_search .= " AND ({$wpdb->posts}.post_password = '') ";
-			}
-		} else {
+		$conditions = apply_filters( 'job_listing_search_conditions', $conditions, $job_manager_keyword );
+		if ( empty( $conditions ) ) {
 			return $search;
 		}
 
-		return $new_search;
+		$conditions_str = implode( ' OR ', $conditions );
+
+		if ( ! empty( $search ) ) {
+			$search = preg_replace( '/^ AND /', '', $search );
+			$search = " AND ( {$search} OR ( {$conditions_str} ) )";
+		} else {
+			$search = " AND ( {$conditions_str} )";
+		}
+
+		return $search;
 	}
 endif;
 
@@ -496,7 +371,6 @@ if ( ! function_exists( 'get_job_listing_post_statuses' ) ) :
 				'pending'         => _x( 'Pending approval', 'post status', 'wp-job-manager' ),
 				'pending_payment' => _x( 'Pending payment', 'post status', 'wp-job-manager' ),
 				'publish'         => _x( 'Active', 'post status', 'wp-job-manager' ),
-				'future'          => _x( 'Scheduled', 'post status', 'wp-job-manager' ),
 			]
 		);
 	}
@@ -514,7 +388,7 @@ if ( ! function_exists( 'get_featured_job_ids' ) ) :
 			[
 				'posts_per_page'   => -1,
 				'suppress_filters' => false,
-				'post_type'        => \WP_Job_Manager_Post_Types::PT_LISTING,
+				'post_type'        => 'job_listing',
 				'post_status'      => 'publish',
 				'meta_key'         => '_featured', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Used in production with no issues.
 				'meta_value'       => '1', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Used in production with no issues.
@@ -546,7 +420,7 @@ if ( ! function_exists( 'get_job_listing_types' ) ) :
 			$args = apply_filters( 'get_job_listing_types_args', $args );
 
 			// Prevent users from filtering the taxonomy.
-			$args['taxonomy'] = \WP_Job_Manager_Post_Types::TAX_LISTING_TYPE;
+			$args['taxonomy'] = 'job_listing_type';
 
 			return get_terms( $args );
 		}
@@ -581,7 +455,7 @@ if ( ! function_exists( 'get_job_listing_categories' ) ) :
 		$args = apply_filters( 'get_job_listing_category_args', $args );
 
 		// Prevent users from filtering the taxonomy.
-		$args['taxonomy'] = \WP_Job_Manager_Post_Types::TAX_LISTING_CATEGORY;
+		$args['taxonomy'] = 'job_listing_category';
 
 		return get_terms( $args );
 	}
@@ -603,7 +477,7 @@ if ( ! function_exists( 'job_manager_get_filtered_links' ) ) :
 		if ( $args['search_categories'] ) {
 			foreach ( $args['search_categories'] as $category ) {
 				if ( is_numeric( $category ) ) {
-					$category_object = get_term_by( 'id', $category, \WP_Job_Manager_Post_Types::TAX_LISTING_CATEGORY );
+					$category_object = get_term_by( 'id', $category, 'job_listing_category' );
 					if ( ! is_wp_error( $category_object ) ) {
 						$job_categories[] = $category_object->slug;
 					}
@@ -651,8 +525,7 @@ if ( ! function_exists( 'job_manager_get_filtered_links' ) ) :
 		$return = '';
 
 		foreach ( $links as $key => $link ) {
-			$attrs   = ! empty( $link['onclick'] ) ? ' onclick="' . esc_attr( $link['onclick'] ) . '"' : '';
-			$return .= '<a href="' . esc_url( $link['url'] ) . '" class="' . esc_attr( $key ) . '"' . $attrs . '>' . wp_kses_post( $link['name'] ) . '</a>';
+			$return .= '<a href="' . esc_url( $link['url'] ) . '" class="' . esc_attr( $key ) . '">' . wp_kses_post( $link['name'] ) . '</a>';
 		}
 
 		return $return;
@@ -879,7 +752,7 @@ function job_manager_user_can_edit_job( $job_id ) {
 	} else {
 		$job = get_post( $job_id );
 
-		if ( ! $job || \WP_Job_Manager_Post_Types::PT_LISTING !== $job->post_type || ( absint( $job->post_author ) !== get_current_user_id() && ! current_user_can( 'edit_post', $job_id ) ) ) {
+		if ( ! $job || 'job_listing' !== $job->post_type || ( absint( $job->post_author ) !== get_current_user_id() && ! current_user_can( 'edit_post', $job_id ) ) ) {
 			$can_edit = false;
 		}
 	}
@@ -913,7 +786,7 @@ function is_wpjm() {
  * @return bool
  */
 function is_wpjm_page() {
-	$is_wpjm_page = is_post_type_archive( \WP_Job_Manager_Post_Types::PT_LISTING );
+	$is_wpjm_page = is_post_type_archive( 'job_listing' );
 
 	if ( ! $is_wpjm_page ) {
 		$wpjm_page_ids = array_filter(
@@ -1009,7 +882,7 @@ function has_wpjm_shortcode( $content = null, $tag = null ) {
  * @return bool
  */
 function is_wpjm_job_listing() {
-	return is_singular( [ \WP_Job_Manager_Post_Types::PT_LISTING ] );
+	return is_singular( [ 'job_listing' ] );
 }
 
 /**
@@ -1020,7 +893,7 @@ function is_wpjm_job_listing() {
  * @return bool
  */
 function is_wpjm_taxonomy() {
-	return is_tax( get_object_taxonomies( \WP_Job_Manager_Post_Types::PT_LISTING ) );
+	return is_tax( get_object_taxonomies( 'job_listing' ) );
 }
 
 /**
@@ -1288,7 +1161,7 @@ function job_manager_dropdown_categories( $args = '' ) {
 		'id'              => '',
 		'class'           => 'job-manager-category-dropdown ' . ( is_rtl() ? 'chosen-rtl' : '' ),
 		'depth'           => 0,
-		'taxonomy'        => \WP_Job_Manager_Post_Types::TAX_LISTING_CATEGORY,
+		'taxonomy'        => 'job_listing_category',
 		'value'           => 'id',
 		'multiple'        => true,
 		'show_option_all' => false,
@@ -1640,7 +1513,7 @@ function job_manager_duplicate_listing( $post_id ) {
 	}
 
 	$post = get_post( $post_id );
-	if ( ! $post || \WP_Job_Manager_Post_Types::PT_LISTING !== $post->post_type ) {
+	if ( ! $post || 'job_listing' !== $post->post_type ) {
 		return 0;
 	}
 
