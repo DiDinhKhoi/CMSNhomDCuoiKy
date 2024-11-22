@@ -48,14 +48,14 @@ define( 'DB_COLLATE', '' );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         '[iGm@EptDggZ!nJbj.,dq+z(t*U?Kb^X)v3D7DHbAJ&2`@!=.E<:zO[aF/F4M5mS' );
-define( 'SECURE_AUTH_KEY',  '8HZyG}/4fxf:`G53OK;l2QdpET9+.os?ksJF2 =Y+ss4>{~[mc)Y@2{%PDk/07};' );
-define( 'LOGGED_IN_KEY',    '@O+=vUaL[4jhkc7cJm8h<nZndfX1?k-)$M#cgRKZi878RJ&j%o5MA`pp2jHe=>gM' );
-define( 'NONCE_KEY',        'e17B7pPy`Qm[TTJ7VzC8L[m4I@E=jpJIj#YPtS4e{hPp5Im4HI@D4|T+Z%V7 V[R' );
-define( 'AUTH_SALT',        '8hqWfxVOpA88;BqEEu1R/hz*,*[i)0m,;~R`gAs 6{r&J0>F- RGhzs6hs]C9[,r' );
-define( 'SECURE_AUTH_SALT', 'AnOWT7egr>AriC:|kP][fP2W:7^vamoRAGG W!myd+Tu4&2I$7RP$=4/)dU:1~a|' );
-define( 'LOGGED_IN_SALT',   '2WUJEoDm97>(HIprkB9CXKK:n2]MPk<k96>,#3O6n-dNC-wBSObQk )w<>EVOxNj' );
-define( 'NONCE_SALT',       '!cjHp)tE!|!!~Hf6?6Du`Ns%T+OJ@|n)eg,+aF9/PoUC:GM_BN1UdXL#P2kcxMpX' );
+define( 'AUTH_KEY',         'cLF{^hUrEQdBwD<Z3m2t(ON_o6Ix!guONor8yt7K(fl9J]L?IJ?3OUXlq)dz7}[H' );
+define( 'SECURE_AUTH_KEY',  'vU:gy|rHk=<Q@m/M[JH^8^{(#}=ty@|CKL+8)}rIERB19cdU|d9.Ii.}>,1Oav4d' );
+define( 'LOGGED_IN_KEY',    'b|*++v>y7wo.5B_u3R[}x`ZYH!]d%%O6Utfb5XxuK@g&Rs!*JJw#HW(s</r:bAkc' );
+define( 'NONCE_KEY',        'XC2N=M}PRw{Dg>TUG7:x=ZOdT7XgtL@R}P~x U:wfYEj{u?[L.~/CKB[m:!~Kj*A' );
+define( 'AUTH_SALT',        '=!u}dEm?BcDy(=#W.vH,</>0*i@A <cVHm$@L52-=Qc$3z$/40s[]Uje6g@rJUV9' );
+define( 'SECURE_AUTH_SALT', '@~AOEF>#-O]am` QL00mrQ=Jh&m;j`t/mmAJ4yT1oX*m1+w2qHQ$I#DZp@L2<! p' );
+define( 'LOGGED_IN_SALT',   'Io^IJ9~hj}IKwHu}{@Kpb{fngTNO2;|pn7Y(#WYU|3t4),]-tVwAas35Ptycp-HW' );
+define( 'NONCE_SALT',       'O;9^~=fJ0RPDK)-~MoUW~*ovv2T>/8H,(9?-RzPw3-~8d.4t,2g?]?_{mALfMjU ' );
 
 /**#@-*/
 
@@ -64,6 +64,12 @@ define( 'NONCE_SALT',       '!cjHp)tE!|!!~Hf6?6Du`Ns%T+OJ@|n)eg,+aF9/PoUC:GM_BN1
  *
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
+ *
+ * At the installation time, database tables are created with the specified prefix.
+ * Changing this value after WordPress is installed will make your site think
+ * it has not been installed.
+ *
+ * @link https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#table-prefix
  */
 $table_prefix = 'wp_';
 

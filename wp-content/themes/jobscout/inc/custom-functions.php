@@ -107,7 +107,7 @@ function jobscout_setup() {
      * Add Custom Images sizes.
     */    
     add_image_size( 'jobscout-schema', 600, 60 ); 
-    add_image_size( 'jobscout-blog', 600, 450, true );
+    add_image_size( 'jobscout-blog', 400, 400, true );
     add_image_size( 'jobscout-single', 838, 471, true );
     add_image_size( 'jobscout-single-fullwidth', 1170, 471, true );
     
