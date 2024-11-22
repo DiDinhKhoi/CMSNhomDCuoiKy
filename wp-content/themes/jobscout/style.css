@@ -8624,8 +8624,8 @@ RESPONSIVE STYLESHEET
 .load_more_jobs {
   display: block;
   text-align: center;
-  background-color: #e67e22 !important;
-  color: #fff !important;
+  background-color: #fff !important;
+  color: #e67e22 !important;
   padding: 10px 20px;
   font-size: 14px !important;
   font-weight: bold;
@@ -8633,17 +8633,18 @@ RESPONSIVE STYLESHEET
   margin: 20px auto;
   text-decoration: none;
   transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out;
-  border: 2px solid transparent; /* Border mặc định là trong suốt */
+  border: 2px solid #e67e22; /* Border mặc định là trong suốt */
 }
 
 .load_more_jobs:hover {
-  background-color: #fff  !important;
-  color: #e67e22 !important;
-  border: 1px solid #e67e22 !important; /* Viền cam */
+  background-color: #e67e22 !important;
+  color: #fff !important;
+  border: 1px solid transparent !important; /* Viền cam */
 }
 
 .load_more_jobs strong {
-  margin-left: 0px;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .company-name::before {
