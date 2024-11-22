@@ -8652,7 +8652,7 @@ p{
 }
 
 .svg-inline--fa.fa-location-dot {
-  display: none;
+  display: inline;
 }
 
 /* Loại bỏ border-top, margin-top, padding-top, font-size từ .entry-meta */
