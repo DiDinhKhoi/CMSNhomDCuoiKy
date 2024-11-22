@@ -54,7 +54,7 @@ Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
 
-:root {
+ :root {
   --primary-color: #2ace5e;
   --primary-color-rgb: 42, 206, 94;
   --primary-color-dark: #36b25ded;
@@ -2618,7 +2618,7 @@ section.top-job-section .section-title {
 }
 
 .top-job-section .row div.job_listings article .company-name::before {
-  content: "@";
+  
 }
 
 .top-job-section .row div.job_listings article .entry-meta {
@@ -2722,25 +2722,10 @@ section.top-job-section .section-title {
 }
 
 .top-job-section div.job_listings .load_more_jobs:hover {
-  color: #2ace5e;
-  background: none;
+  color: #ffff;
+  background: #ea751e;
 }
 
-.top-job-section div.job_listings .load_more_jobs::before {
-  content: "";
-  background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="%23fff" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>');
-  background-repeat: no-repeat;
-  width: 11px;
-  height: 12px;
-  position: absolute;
-  top: 17px;
-  left: 20px;
-}
-
-.top-job-section div.job_listings .load_more_jobs:hover::before {
-  content: "";
-  background-image: url('data:image/svg+xml; utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="%232ace5e" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>');
-}
 
 .top-job-section div.job_listings .load_more_jobs strong {
   font-weight: 700;
@@ -8159,3 +8144,4 @@ RESPONSIVE STYLESHEET
 .wp-block-social-links {
   flex-wrap: wrap !important;
 }
+
