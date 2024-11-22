@@ -2613,8 +2613,7 @@ section.top-job-section .section-title {
   font-size: 0.8888em;
   color: rgba(0, 0, 0, 0.5);
   font-weight: 400;
-  line-height: 1.44em;
-  margin-top: 5px;
+  line-height: 1.44em;;
 }
 
 .top-job-section .row div.job_listings article .company-name::before {
@@ -2671,12 +2670,12 @@ section.top-job-section .section-title {
   letter-spacing: 1px;
   font-weight: 700;
   display: inline-block;
-  border: 1px solid #2ace5e;
-  border-radius: 40px;
+
   padding: 5px 20px;
   color: #2ace5e;
   margin-top: 10px;
   cursor: default;
+
 }
 
 .job-manager li.freelance,
@@ -3320,6 +3319,11 @@ CONTACT PAGE
   list-style: none;
 }
 
+
+.company-name {
+  margin-top: 4px !important;
+}
+
 .page-template-contact .site-main .contact-info ul.contact-list li {
   margin-bottom: 30px;
   position: relative;
@@ -3759,6 +3763,16 @@ SINGLE JOB PAGE
   padding-left: 20px;
 }
 
+/* .single-job .site-content .entry-header .job-title-wrap .job-info{ 
+  width: 10px;
+} */
+
+.job-content{
+  font-size: 13px;
+  margin-top: 50px;
+  margin-left: 10px;
+}
+
 .single-job .site-content .entry-header .job-title-wrap .entry-title {
   margin-top: 0;
   margin-bottom: 0;
@@ -3891,7 +3905,9 @@ SINGLE JOB PAGE
   display: table;
   width: 100%;
 }
-
+.job-location {
+  margin-top: 7px !important;
+}
 .single-job_listing .site-main .single_job_listing .company>img {
   width: 80px;
   height: auto;
@@ -3972,6 +3988,11 @@ SINGLE JOB PAGE
   font-weight: 300;
   margin-bottom: 5px;
 }
+
+article {
+width: 1200px;
+}
+
 
 .single-job .additional-posts .article-wrap .job-title-wrap .entry-meta svg,
 .error404 .additional-posts .entry-meta svg {
@@ -8370,10 +8391,11 @@ RESPONSIVE STYLESHEET
   content: "";
   position: absolute;
   right: 0; /* Điều chỉnh vị trí của đường kẻ dọc */
-  top: 10px;
+  top: 6px;
   bottom: 11px;
-  width: 1px;
+  width: 2px;
   background-color: #ddd;
+  margin-bottom: 54px;
 }
 
 .company-name {
@@ -8388,8 +8410,8 @@ RESPONSIVE STYLESHEET
   content: "";
   position: absolute;
   right: 0; /* Điều chỉnh vị trí của đường kẻ dọc */
-  top: 5px;
-  bottom: 10px;
+  top: 7px;
+  bottom: 65px;
   width: 1px;
   background-color: #ddd;
 }
@@ -8406,14 +8428,6 @@ RESPONSIVE STYLESHEET
 }
 
 /* Thêm border chung cho 3 phần job-type, company-name, company-address */
-.job-meta {
-  display: flex;
-  font-size: 12px !important; /* Font size nhỏ lại */
-  background-color: #f1f1f1; /* Màu nền xám nhạt */
-  border: 1px solid #ddd; /* Border bao quanh */
-  border-radius: 4px;
-  margin-right: 10px;
-}
 
 .company_logo {
   border: 1px solid #d0d0d0;
