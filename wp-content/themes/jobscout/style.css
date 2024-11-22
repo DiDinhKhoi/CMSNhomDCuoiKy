@@ -8672,7 +8672,8 @@ p{
 .job-post-date {
   font-size: 12px; /* Font size nhỏ lại */
   color: #777;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  margin-top: -4px;
 }
 
 /* Mô tả công việc */
