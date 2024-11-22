@@ -22,7 +22,8 @@ get_header(); ?>
         */
         do_action( 'jobscout_before_posts_content' );
         ?>
-        
+        <h2 class="section-title" style="letter-spacing: 2px;font-weight:700;text-align: center;">NEWEST BLOG ENTRIES
+		</h2>
         <main id="main" class="site-main">
 			<div class="article-section">
 				<div class="article-wrap">
