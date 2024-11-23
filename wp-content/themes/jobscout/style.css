@@ -8483,7 +8483,7 @@ RESPONSIVE STYLESHEET
 .wp-block-social-links {
   flex-wrap: wrap !important;
 }
-/*Y闁挎 c瀹�濂夋簛 3 kh娑斿潟*/
+/*Y闂備焦瀵ч锟� c閻庣櫢鎷峰┑鍌氼槹缁拷 3 kh婵炴垶鏌ㄥ锟�*/
 #blog-section {
   background-color: #f9f9f9;
   padding: 50px 0;
@@ -8613,14 +8613,14 @@ p{
 
 
 
-/* -------------------------------Y閿歶 c宀奉溁 2----------------------------------- */
+/* -------------------------------Y闂佹寧顒� c鐎癸拷婵傚绨� 2----------------------------------- */
 
-/* X璐竌 d宀奉櫥 + trong ::before */
+/* X閻犳劗鐝� d鐎癸拷婵傚顏� + trong ::before */
 .load_more_jobs::before {
   content: none !important;
 }
 
-/* T闇墆 ch宄勫《h l宀奉摨 n鐓 Load More Jobs */
+/* T闂傚洤顣� ch鐎瑰嫬瀚妴濂� l鐎癸拷婵傚鎳� n闁绘搩妲� Load More Jobs */
 .load_more_jobs {
   display: block;
   text-align: center;
@@ -8633,13 +8633,13 @@ p{
   margin: 10px auto;
   text-decoration: none;
   transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out;
-  border: 2px solid #e67e22; /* Border m宀风 鑶藉硠濯檋 l鑴� trong su宄勬唸 */
+  border: 2px solid #e67e22; /* Border m鐎癸拷妞嬪寒鐓� 闁兼儼妫勭涵鐘冲垔濡撅拷 l闁艰揪鎷� trong su鐎瑰嫬瀚崬锟� */
 }
 
 .load_more_jobs:hover {
   background-color: #e67e22 !important;
   color: #fff !important;
-  border: 1px solid transparent !important; /* Vi宄勪苟 cam */
+  border: 1px solid transparent !important; /* Vi鐎瑰嫬瀚懟锟� cam */
 }
 
 .load_more_jobs strong {
@@ -8655,28 +8655,28 @@ p{
   display: inline;
 }
 
-/* Lo宀奉摨 b宄勶拷 border-top, margin-top, padding-top, font-size t宄勶拷 .entry-meta */
+/* Lo鐎癸拷婵傚鎳� b鐎瑰嫬瀚搁幏锟� border-top, margin-top, padding-top, font-size t鐎瑰嫬瀚搁幏锟� .entry-meta */
 .entry-meta {
-  border-top: none !important; /* Lo宀奉摨 b宄勶拷 border-top */
-  margin-top: 0 !important; /* Lo宀奉摨 b宄勶拷 margin-top */
-  padding-top: 0 !important; /* Lo宀奉摨 b宄勶拷 padding-top */
+  border-top: none !important; /* Lo鐎癸拷婵傚鎳� b鐎瑰嫬瀚搁幏锟� border-top */
+  margin-top: 0 !important; /* Lo鐎癸拷婵傚鎳� b鐎瑰嫬瀚搁幏锟� margin-top */
+  padding-top: 0 !important; /* Lo鐎癸拷婵傚鎳� b鐎瑰嫬瀚搁幏锟� padding-top */
 }
 
-/* Ti閿歶 鑶藉硠锟� c涔坣g vi宄勫樈 - gi宀奉柍 size */
+/* Ti闂佹寧顒� 闁兼儼妫勭涵鐘绘晸閿燂拷 c濞戞柨娼眊 vi鐎瑰嫬瀚Ο锟� - gi鐎癸拷婵傚鐓� size */
 .entry-title {
-  font-size: 18px !important; /* Font size nh宄勶拷 l宀奉摨 */
+  font-size: 18px !important; /* Font size nh鐎瑰嫬瀚搁幏锟� l鐎癸拷婵傚鎳� */
   margin-bottom: 5px !important;
 }
 
-/* Ng鑴縴 t宀奉摰 c涔坣g vi宄勫樈 - gi宀奉柍 size */
+/* Ng闁煎澶� t鐎癸拷婵傚鎳� c濞戞柨娼眊 vi鐎瑰嫬瀚Ο锟� - gi鐎癸拷婵傚鐓� size */
 .job-post-date {
-  font-size: 12px; /* Font size nh宄勶拷 l宀奉摨 */
+  font-size: 12px; /* Font size nh鐎瑰嫬瀚搁幏锟� l鐎癸拷婵傚鎳� */
   color: #777;
   margin-bottom: 8px;
   margin-top: -4px;
 }
 
-/* M涔� t宀凤拷 c涔坣g vi宄勫樈 */
+/* M濞戞棑鎷� t鐎癸拷閸戙倖瀚� c濞戞柨娼眊 vi鐎瑰嫬瀚Ο锟� */
 .job-description {
   margin-top: 20px;
   margin-left: -57px;
@@ -8696,7 +8696,7 @@ p{
 .job-type::after {
   content: "";
   position: absolute;
-  right: 0; /* 鑶糹宄勪菇 ch宄勫《h v宄勶拷 tr閾� c宄勵湩 鑶界摙宄勬棘g k宀凤拷 d宄勫硿 */
+  right: 0; /* 闁煎墎褰荤�瑰嫬瀚懣锟� ch鐎瑰嫬瀚妴濂� v鐎瑰嫬瀚搁幏锟� tr闂佹拝鎷� c鐎瑰嫬瀚峰﹢锟� 闁煎墎鏅幗娆忕暋閸曨剚顥漡 k鐎癸拷閸戙倖瀚� d鐎瑰嫬瀚涵锟� */
   top: 10px;
   bottom: 11px;
   width: 1px;
@@ -8715,7 +8715,7 @@ p{
 .company-name::after {
   content: "";
   position: absolute;
-  right: 0; /* 鑶糹宄勪菇 ch宄勫《h v宄勶拷 tr閾� c宄勵湩 鑶界摙宄勬棘g k宀凤拷 d宄勫硿 */
+  right: 0; /* 闁煎墎褰荤�瑰嫬瀚懣锟� ch鐎瑰嫬瀚妴濂� v鐎瑰嫬瀚搁幏锟� tr闂佹拝鎷� c鐎瑰嫬瀚峰﹢锟� 闁煎墎鏅幗娆忕暋閸曨剚顥漡 k鐎癸拷閸戙倖瀚� d鐎瑰嫬瀚涵锟� */
   top: 12px;
   bottom: 10px;
   width: 1px;
@@ -8743,8 +8743,8 @@ p{
 /* Th閿歮 border chung cho 3 ph宀奉湸 job-type, company-name, company-address */
 .job-meta {
   display: flex;
-  font-size: 12px !important; /* Font size nh鐎瑰嫬瀚搁幏锟� l鐎癸拷婵傚鎳� */
-  background-color: #f1f1f1; /* M闁煎璧� n鐎瑰嫬瀚懟锟� x閻犲绠� nh鐎癸拷婵傚鎳� */
+  font-size: 12px !important; /* Font size nh瀹勫嫸鎷� l瀹�濂夋懆 */
+  background-color: #f1f1f1; /* M閼寸赴 n瀹勫嫪鑻� x鐠嬶箮 nh瀹�濂夋懙 */
   border: 1px solid #ddd; /* Border bao quanh */
   border-radius: 2px !important;
   margin-right: 10px;
