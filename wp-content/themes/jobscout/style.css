@@ -8483,7 +8483,7 @@ RESPONSIVE STYLESHEET
 .wp-block-social-links {
   flex-wrap: wrap !important;
 }
-/*Yêu cầu 3 khôi*/
+/*Y闁挎 c瀹�濂夋簛 3 kh娑斿潟*/
 #blog-section {
   background-color: #f9f9f9;
   padding: 50px 0;
@@ -8613,14 +8613,14 @@ p{
 
 
 
-/* -------------------------------Yêu cầu 2----------------------------------- */
+/* -------------------------------Y閿歶 c宀奉溁 2----------------------------------- */
 
-/* Xóa dấu + trong ::before */
+/* X璐竌 d宀奉櫥 + trong ::before */
 .load_more_jobs::before {
   content: none !important;
 }
 
-/* Tùy chỉnh lại nút Load More Jobs */
+/* T闇墆 ch宄勫《h l宀奉摨 n鐓 Load More Jobs */
 .load_more_jobs {
   display: block;
   text-align: center;
@@ -8633,13 +8633,13 @@ p{
   margin: 10px auto;
   text-decoration: none;
   transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out;
-  border: 2px solid #e67e22; /* Border mặc định là trong suốt */
+  border: 2px solid #e67e22; /* Border m宀风 鑶藉硠濯檋 l鑴� trong su宄勬唸 */
 }
 
 .load_more_jobs:hover {
   background-color: #e67e22 !important;
   color: #fff !important;
-  border: 1px solid transparent !important; /* Viền cam */
+  border: 1px solid transparent !important; /* Vi宄勪苟 cam */
 }
 
 .load_more_jobs strong {
@@ -8655,28 +8655,28 @@ p{
   display: inline;
 }
 
-/* Loại bỏ border-top, margin-top, padding-top, font-size từ .entry-meta */
+/* Lo宀奉摨 b宄勶拷 border-top, margin-top, padding-top, font-size t宄勶拷 .entry-meta */
 .entry-meta {
-  border-top: none !important; /* Loại bỏ border-top */
-  margin-top: 0 !important; /* Loại bỏ margin-top */
-  padding-top: 0 !important; /* Loại bỏ padding-top */
+  border-top: none !important; /* Lo宀奉摨 b宄勶拷 border-top */
+  margin-top: 0 !important; /* Lo宀奉摨 b宄勶拷 margin-top */
+  padding-top: 0 !important; /* Lo宀奉摨 b宄勶拷 padding-top */
 }
 
-/* Tiêu đề công việc - giảm size */
+/* Ti閿歶 鑶藉硠锟� c涔坣g vi宄勫樈 - gi宀奉柍 size */
 .entry-title {
-  font-size: 18px !important; /* Font size nhỏ lại */
+  font-size: 18px !important; /* Font size nh宄勶拷 l宀奉摨 */
   margin-bottom: 5px !important;
 }
 
-/* Ngày tạo công việc - giảm size */
+/* Ng鑴縴 t宀奉摰 c涔坣g vi宄勫樈 - gi宀奉柍 size */
 .job-post-date {
-  font-size: 12px; /* Font size nhỏ lại */
+  font-size: 12px; /* Font size nh宄勶拷 l宀奉摨 */
   color: #777;
   margin-bottom: 8px;
   margin-top: -4px;
 }
 
-/* Mô tả công việc */
+/* M涔� t宀凤拷 c涔坣g vi宄勫樈 */
 .job-description {
   margin-top: 20px;
   margin-left: -57px;
@@ -8696,7 +8696,7 @@ p{
 .job-type::after {
   content: "";
   position: absolute;
-  right: 0; /* Điều chỉnh vị trí của đường kẻ dọc */
+  right: 0; /* 鑶糹宄勪菇 ch宄勫《h v宄勶拷 tr閾� c宄勵湩 鑶界摙宄勬棘g k宀凤拷 d宄勫硿 */
   top: 10px;
   bottom: 11px;
   width: 1px;
@@ -8715,7 +8715,7 @@ p{
 .company-name::after {
   content: "";
   position: absolute;
-  right: 0; /* Điều chỉnh vị trí của đường kẻ dọc */
+  right: 0; /* 鑶糹宄勪菇 ch宄勫《h v宄勶拷 tr閾� c宄勵湩 鑶界摙宄勬棘g k宀凤拷 d宄勫硿 */
   top: 12px;
   bottom: 10px;
   width: 1px;
@@ -8740,11 +8740,11 @@ p{
   font-size: 12px;
 }
 
-/* Thêm border chung cho 3 phần job-type, company-name, company-address */
+/* Th閿歮 border chung cho 3 ph宀奉湸 job-type, company-name, company-address */
 .job-meta {
   display: flex;
-  font-size: 12px !important; /* Font size nhỏ lại */
-  background-color: #f1f1f1; /* Màu nền xám nhạt */
+  font-size: 12px !important; /* Font size nh鐎瑰嫬瀚搁幏锟� l鐎癸拷婵傚鎳� */
+  background-color: #f1f1f1; /* M闁煎璧� n鐎瑰嫬瀚懟锟� x閻犲绠� nh鐎癸拷婵傚鎳� */
   border: 1px solid #ddd; /* Border bao quanh */
   border-radius: 2px !important;
   margin-right: 10px;
